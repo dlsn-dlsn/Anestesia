@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AnestesIA">
+<title>AnestesIA</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;600&display=swap');
+
+:root {
+  --hue:158;
+  --accent:hsl(var(--hue),69%,37%); --accent2:hsl(var(--hue),72%,25%);
+  --accent-dim:hsla(var(--hue),69%,37%,.13); --accent-dim2:hsla(var(--hue),69%,37%,.07);
+  --accent-border:hsla(var(--hue),69%,37%,.35); --accent-text:hsl(var(--hue),60%,68%);
+  --bg:hsl(var(--hue),25%,5%); --bg2:hsl(var(--hue),20%,8%);
+  --bg3:hsl(var(--hue),18%,11%); --bg4:hsl(var(--hue),16%,14%);
+  --border:hsla(var(--hue),15%,100%,.08); --border2:hsla(var(--hue),15%,100%,.14);
+  --text:hsl(var(--hue),20%,92%); --text2:hsl(var(--hue),10%,58%); --text3:hsl(var(--hue),10%,38%);
+  --blue:#378ADD; --blue-dim:rgba(55,138,221,.13); --blue-border:rgba(55,138,221,.3); --blue-text:#85B7EB;
+  --amber:#EF9F27; --amber-dim:rgba(239,159,39,.11); --amber-border:rgba(239,159,39,.28); --amber-text:#EFC97A;
+  --red:#E24B4A; --red-dim:rgba(226,75,74,.11); --red-border:rgba(226,75,74,.28);
+  --coral:#D85A30; --coral-dim:rgba(216,90,48,.11); --coral-border:rgba(216,90,48,.28); --coral-text:#F0997B;
+  --purple:#8B6FD4; --purple-dim:rgba(139,111,212,.11); --purple-border:rgba(139,111,212,.28); --purple-text:#B8A2E8;
+  --r:10px; --rs:6px;
+  --mono:'IBM Plex Mono',monospace; --sans:'Syne',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);height:100%}
+body{font-family:var(--sans);color:var(--text);background:var(--bg);min-height:100dvh}
+#app{max-width:520px;margin:0 auto;padding:0 0 5rem;min-height:100dvh}
+
+.header{padding:1.25rem 1rem 0;display:flex;align-items:center;gap:10px}
+.logo-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);flex-shrink:0;transition:background .4s,box-shadow .4s}
+.logo-title{font-size:18px;font-weight:600;letter-spacing:-.02em}
+.logo-sub{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:1px}
+
+.nav{display:flex;margin:1.25rem 1rem 0;background:var(--bg3);border-radius:var(--r);padding:3px;border:.5px solid var(--border)}
+.nav button{flex:1;padding:8px;border:none;background:transparent;border-radius:8px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;transition:all .18s;font-family:var(--sans)}
+.nav button.active{background:var(--bg4);color:var(--text);border:.5px solid var(--border2)}
+
+.content{padding:1rem}
+.card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem;margin-bottom:10px}
+.section-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:10px}
+.divider{border:none;border-top:.5px solid var(--border);margin:.75rem 0}
+
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;color:var(--text3);margin-bottom:4px;letter-spacing:.02em}
+.field input,.field select,.field textarea{width:100%;padding:9px 11px;border:.5px solid var(--border2);border-radius:var(--rs);background:var(--bg3);color:var(--text);font-size:13px;font-family:var(--sans);appearance:none;-webkit-appearance:none;transition:border-color .15s;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7063' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.field textarea{resize:vertical;min-height:60px}
+
+.weight-row{display:flex;gap:6px;align-items:flex-end}
+.weight-row input{flex:1}
+.weight-confirm{padding:9px 14px;border-radius:var(--rs);border:.5px solid var(--accent-border);background:var(--accent-dim);color:var(--accent-text);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--sans);white-space:nowrap;transition:background .15s}
+.weight-confirm:hover{background:var(--accent-dim2)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+
+.btn{padding:9px 16px;border-radius:var(--rs);border:.5px solid var(--border2);background:var(--bg3);color:var(--text);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--sans);transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:hover{background:var(--bg4)}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);transition:background .4s,border-color .4s}
+.btn-primary:hover{background:var(--accent2)}
+.btn-danger{background:var(--red-dim);color:var(--red);border-color:var(--red-border)}
+.btn-sm{padding:5px 10px;font-size:11px}
+.btn-full{width:100%}
+.btn-icon{padding:4px 8px;background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
+.btn-icon:hover{color:var(--red)}
+
+.tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:500;font-family:var(--mono);background:var(--bg4);border:.5px solid var(--border);color:var(--text2)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:500}
+.badge-green{background:var(--accent-dim);border:.5px solid var(--accent-border);color:var(--accent-text)}
+.badge-blue{background:var(--blue-dim);border:.5px solid var(--blue-border);color:var(--blue-text)}
+.badge-amber{background:var(--amber-dim);border:.5px solid var(--amber-border);color:var(--amber-text)}
+.badge-coral{background:var(--coral-dim);border:.5px solid var(--coral-border);color:var(--coral-text)}
+.badge-purple{background:var(--purple-dim);border:.5px solid var(--purple-border);color:var(--purple-text)}
+.badge-red{background:var(--red-dim);border:.5px solid var(--red-border);color:var(--red)}
+
+/* ceiling badge */
+.ceiling-note{font-size:10px;color:var(--amber-text);font-family:var(--mono);margin-left:4px;opacity:.85}
+
+.phase-tabs{display:flex;margin-bottom:10px;background:var(--bg3);border-radius:var(--r);padding:3px;border:.5px solid var(--border)}
+.phase-tab{flex:1;padding:7px 4px;border:none;background:transparent;border-radius:8px;font-size:11px;font-weight:500;color:var(--text3);cursor:pointer;transition:all .18s;font-family:var(--sans);text-align:center}
+.phase-tab.active{background:var(--bg4);color:var(--text);border:.5px solid var(--border2)}
+.phase-tab.has-meds{color:var(--accent-text)}
+.phase-badge{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--accent);color:#fff;font-size:9px;font-weight:600;line-height:14px;text-align:center;margin-left:3px;vertical-align:middle}
+
+.med-item{display:flex;align-items:center;gap:6px;padding:8px 10px;border:.5px solid var(--border);border-radius:var(--rs);margin-bottom:5px;background:var(--bg3)}
+.med-name{flex:1;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.drug-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.drug-chip{padding:5px 10px;border:.5px solid var(--border2);border-radius:16px;font-size:11px;color:var(--text2);cursor:pointer;background:var(--bg3);transition:all .15s;font-family:var(--sans)}
+.drug-chip:hover{border-color:var(--accent);color:var(--accent-text);background:var(--accent-dim)}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:6px 12px;border:.5px solid var(--border2);border-radius:20px;font-size:12px;color:var(--text2);cursor:pointer;transition:all .15s;background:var(--bg3)}
+.chip:hover{border-color:var(--accent);color:var(--accent-text)}
+.chip.selected{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent-text)}
+
+.suggestion-box{border:.5px solid var(--accent-border);border-radius:var(--r);background:var(--accent-dim2);padding:1rem;margin-bottom:10px}
+.suggestion-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ai-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--accent)}
+.sugg-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:.5px solid var(--accent-border);font-size:12px;gap:6px}
+.sugg-row:last-child{border-bottom:none}
+.sugg-left{display:flex;align-items:center;gap:4px;min-width:0;flex:1}
+.sugg-right{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.sugg-dose{font-family:var(--mono);color:var(--accent-text);font-size:12px}
+.sugg-phase-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;padding:1px 5px;border-radius:3px;flex-shrink:0}
+
+.ai-box{background:var(--bg3);border:.5px solid var(--blue-border);border-radius:var(--r);padding:1rem;margin-bottom:10px;font-size:13px;line-height:1.65;color:var(--text2)}
+.ai-box-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:6px}
+
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--blue-dim);border:.5px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--blue);flex-shrink:0;font-family:var(--mono)}
+
+.case-card{display:flex;gap:10px;align-items:flex-start;padding:.9rem 1.1rem;background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);margin-bottom:8px}
+.case-info{flex:1;min-width:0}
+.case-top{display:flex;justify-content:space-between;align-items:flex-start}
+.case-staff{font-size:13px;font-weight:500}
+.case-date{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.case-proc{font-size:12px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.case-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.case-meds{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+
+.stat-card{background:var(--bg3);border-radius:var(--rs);padding:.75rem;text-align:center}
+.stat-num{font-size:24px;font-weight:600;font-family:var(--mono)}
+.stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+
+.theme-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.swatch{width:36px;height:36px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .15s,border-color .15s;position:relative}
+.swatch:hover{transform:scale(1.1)}
+.swatch.active{border-color:var(--text)}
+.swatch::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;opacity:0}
+.swatch.active::after{opacity:1}
+
+.spinner{width:12px;height:12px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:5.5rem;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:500;z-index:100;opacity:0;transition:opacity .2s,background .4s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.empty{text-align:center;padding:3rem 1rem;color:var(--text3);font-size:13px}
+.warning-bar{background:var(--amber-dim);border:.5px solid var(--amber-border);border-radius:var(--rs);padding:8px 12px;font-size:11px;color:var(--amber-text);margin-bottom:10px}
+.info-bar{font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:8px}
+.staff-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid var(--border)}
+.staff-item:last-child{border-bottom:none}
+.filter-row select{width:100%;padding:7px 28px 7px 10px;border:.5px solid var(--border2);border-radius:var(--rs);background:var(--bg3);color:var(--text);font-size:12px;font-family:var(--sans);appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7063' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;outline:none;margin-bottom:10px}
+.scroll-area{max-height:260px;overflow-y:auto}
+.scroll-area::-webkit-scrollbar{width:3px}
+.scroll-area::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.med-input-area{background:var(--bg3);border:.5px solid var(--border);border-radius:var(--rs);padding:10px;margin-bottom:8px}
+@media(display-mode:standalone){.pwa-hide{display:none}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="logo-dot"></div>
+    <div>
+      <div class="logo-title">AnestesIA</div>
+      <div class="logo-sub" id="headerSub">0 casos · 0 staff</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <button onclick="setTab('session')" id="tab-session" class="active">Sessão</button>
+    <button onclick="setTab('history')" id="tab-history">Histórico</button>
+    <button onclick="setTab('config')"  id="tab-config">Config</button>
+  </nav>
+  <div class="content" id="content"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const VER = 'anestesia_v4';
+const TECHNIQUES = ['Geral inalatória','Geral venosa (TIVA)','Geral balanceada','Raquianestesia','Peridural','CSE (Raqui+Peridural)','BNP isolado','Sedação + BNP','Sedação consciente','Local + sedação'];
+const PHASES = [
+  {key:'induction',   label:'Indução',      color:'badge-green' },
+  {key:'maintenance', label:'Manutenção',   color:'badge-blue'  },
+  {key:'symptomatics',label:'Sintomáticos', color:'badge-amber' },
+  {key:'finalization',label:'Finalização',  color:'badge-coral' },
+];
+// Units: bolus vs infusion vs special
+const BOLUS_UNITS  = ['mg','mcg','g','ml','UI','mmol'];
+const INFUSION_UNITS = ['ml/h','mcg/kg/min','mcg/h','mcg/kg/h','mg/h','mg/kg/h'];
+const SPECIAL_UNITS  = ['%'];
+const ALL_UNITS = [...BOLUS_UNITS, ...INFUSION_UNITS, ...SPECIAL_UNITS];
+
+const DEFAULT_DRUGS = {
+  induction:    ['Midazolam','Fentanil','Sufentanil','Propofol','Ketamina','Etomidato','Cisatracúrio','Rocurônio','Succinilcolina','Atropina','Lidocaína','Dexametasona'],
+  maintenance:  ['Sevoflurano','Isoflurano','Desflurano','Propofol','Remifentanil','Fentanil','Sufentanil','Precedex','Midazolam','Cisatracúrio','Rocurônio','Ketamina','Noradrenalina','Vasopressina'],
+  symptomatics: ['Dipirona','Ondansetrona','Cetoprofeno','Cetorolaco','Dexametasona','Metoclopramida','Droperidol','Efedrina','Noradrenalina','Atropina','Metaraminol'],
+  finalization: ['Neostigmina','Atropina','Sugammadex','Paracetamol','Morfina','Tramadol','Dipirona','Tenoxicam','Ondansetrona','Naloxona'],
+};
+const DEFAULT_PROCEDURES = ['Laparotomia exploradora','Colecistectomia videolaparoscópica','Apendicectomia','Herniorrafia inguinal','Herniorrafia ventral','Cesariana','Histerectomia total','Histerectomia videolaparoscópica','Miomectomia','Prostatectomia radical','Nefrectomia','Nefrectomia parcial','Tireoidectomia total','Tireoidectomia parcial','Mastectomia','Linfadenectomia axilar','Craniotomia','Craniectomia descompressiva','Artrodese lombar','Discectomia lombar','Artroscopia de joelho','Artroscopia de ombro','Artroplastia de quadril','Artroplastia de joelho','Osteossíntese de fêmur','Amigdalectomia + Adenoidectomia','Septoplastia','Rinoplastia','FESS','Timpanoplastia','Coluna cervical anterior','Endoscopia digestiva alta','Colonoscopia','Broncoscopia','CPRE','Cateterismo cardíaco','Implante de marcapasso'];
+const THEMES = [{name:'Verde',hue:158},{name:'Azul',hue:210},{name:'Violeta',hue:265},{name:'Âmbar',hue:35},{name:'Coral',hue:12},{name:'Ciano',hue:185},{name:'Rosa',hue:330},{name:'Neutro',hue:0}];
+const CEIL_MIN_CASES = 4;   // mínimo de casos para detectar teto
+const CEIL_CV_THRESH = 0.18; // coef. variação máximo para considerar dose "estável" (teto)
+
+let S = {
+  staff:[], customProcedures:[], cases:[], apiKey:'', themeHue:158,
+  learnedDrugs:{induction:[],maintenance:[],symptomatics:[],finalization:[]},
+  tab:'session', phase:'induction',
+  session:{staffId:'',sex:'M',age:'',weight:'',weightConfirmed:'',procedure:'',newProc:''},
+  caseForm:{technique:'',phases:{induction:[],maintenance:[],symptomatics:[],finalization:[]},notes:''},
+  newMed:{name:'',dosePerKg:'',totalDose:'',unit:'mg'},
+  newStaff:'', aiText:'', aiLoading:false,
+  histFilter:'', showNewProc:false, showMedForm:false,
+};
+
+// ── PERSIST ────────────────────────────────────────────────────────────────
+function persist(){
+  localStorage.setItem(VER, JSON.stringify({
+    staff:S.staff, customProcedures:S.customProcedures, cases:S.cases,
+    apiKey:S.apiKey, themeHue:S.themeHue, learnedDrugs:S.learnedDrugs
+  }));
+}
+function loadData(){
+  try {
+    const d = JSON.parse(localStorage.getItem(VER) || localStorage.getItem('anestesia_v3') || 'null');
+    if(!d) return;
+    S.staff = d.staff||[]; S.customProcedures = d.customProcedures||[];
+    S.cases = d.cases||[]; S.apiKey = d.apiKey||'';
+    S.themeHue = d.themeHue??158;
+    S.learnedDrugs = d.learnedDrugs||{induction:[],maintenance:[],symptomatics:[],finalization:[]};
+  } catch(e){}
+}
+
+// ── THEME ──────────────────────────────────────────────────────────────────
+function applyTheme(hue){
+  const r = document.documentElement;
+  if(hue===0){
+    r.style.setProperty('--accent','hsl(0,0%,62%)');
+    r.style.setProperty('--accent2','hsl(0,0%,42%)');
+    r.style.setProperty('--accent-dim','hsla(0,0%,62%,.13)');
+    r.style.setProperty('--accent-dim2','hsla(0,0%,62%,.07)');
+    r.style.setProperty('--accent-border','hsla(0,0%,62%,.35)');
+    r.style.setProperty('--accent-text','hsl(0,0%,78%)');
+  } else {
+    r.style.setProperty('--accent',`hsl(${hue},69%,37%)`);
+    r.style.setProperty('--accent2',`hsl(${hue},72%,25%)`);
+    r.style.setProperty('--accent-dim',`hsla(${hue},69%,37%,.13)`);
+    r.style.setProperty('--accent-dim2',`hsla(${hue},69%,37%,.07)`);
+    r.style.setProperty('--accent-border',`hsla(${hue},69%,37%,.35)`);
+    r.style.setProperty('--accent-text',`hsl(${hue},60%,68%)`);
+  }
+  ['bg:25%:5%','bg2:20%:8%','bg3:18%:11%','bg4:16%:14%'].forEach(s=>{
+    const [k,sat,lig]=s.split(':');
+    r.style.setProperty('--'+k,`hsl(${hue},${sat},${lig})`);
+  });
+  r.style.setProperty('--border', `hsla(${hue},15%,100%,.08)`);
+  r.style.setProperty('--border2',`hsla(${hue},15%,100%,.14)`);
+  r.style.setProperty('--text',  `hsl(${hue},20%,92%)`);
+  r.style.setProperty('--text2', `hsl(${hue},10%,58%)`);
+  r.style.setProperty('--text3', `hsl(${hue},10%,38%)`);
+}
+
+// ── HELPERS ────────────────────────────────────────────────────────────────
+const initials = n => n ? n.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2) : '?';
+const allProcs  = () => [...new Set([...DEFAULT_PROCEDURES,...S.customProcedures])].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+function toast(msg,d=2200){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),d); }
+function drugListForPhase(ph){ return [...new Set([...DEFAULT_DRUGS[ph]||[],...S.learnedDrugs[ph]||[]])]; }
+function recordDrug(ph,name){ const l=S.learnedDrugs[ph]||[]; if(!l.includes(name)){ l.push(name); S.learnedDrugs[ph]=l; } }
+
+// ── CEILING DETECTION ──────────────────────────────────────────────────────
+// Returns { ceiling, avgDpk } for a drug+staff combination.
+// ceiling is null if not enough data or no plateau detected.
+function analyzeDrug(staffId, phase, drugName){
+  const cases = S.cases.filter(c => c.staffId === staffId);
+  const entries = [];
+  cases.forEach(c => {
+    const ph = c.phases && c.phases[phase];
+    if(!ph) return;
+    const m = ph.find(m => m.name === drugName);
+    if(!m) return;
+    const w  = parseFloat(c.weight);
+    const dpk = parseFloat(m.dosePerKg);
+    const tot = parseFloat(m.totalDose);
+    if(w > 0 && tot > 0) entries.push({ w, dpk: dpk||null, tot });
+  });
+  if(entries.length < 2) return { ceiling: null, avgDpk: null, n: entries.length };
+
+  // average dose/kg from cases where it was recorded
+  const dpkVals = entries.filter(e=>e.dpk).map(e=>e.dpk);
+  const avgDpk  = dpkVals.length ? dpkVals.reduce((a,b)=>a+b)/dpkVals.length : null;
+
+  if(entries.length < CEIL_MIN_CASES) return { ceiling: null, avgDpk, n: entries.length };
+
+  // Sort by weight; take the top half (heavier patients) and check if total dose is stable
+  const sorted   = [...entries].sort((a,b)=>a.w-b.w);
+  const topHalf  = sorted.slice(Math.floor(sorted.length/2));
+  const totals   = topHalf.map(e=>e.tot);
+  const mean     = totals.reduce((a,b)=>a+b)/totals.length;
+  const sd       = Math.sqrt(totals.map(v=>(v-mean)**2).reduce((a,b)=>a+b)/totals.length);
+  const cv       = mean > 0 ? sd/mean : 1;
+
+  // Also check: does total dose grow with weight? If slope ~0, plateau confirmed.
+  const wArr = topHalf.map(e=>e.w);
+  const wMean = wArr.reduce((a,b)=>a+b)/wArr.length;
+  const num   = wArr.reduce((s,w,i)=>s+(w-wMean)*(totals[i]-mean),0);
+  const den   = wArr.reduce((s,w)=>s+(w-wMean)**2,0);
+  const slope = den>0 ? num/den : 0;
+
+  // Ceiling confirmed if CV is low AND slope is flat relative to mean
+  const slopeRelative = mean > 0 ? Math.abs(slope)/mean : 1;
+  const hasCeiling = cv <= CEIL_CV_THRESH && slopeRelative < 0.005;
+
+  // Use median of top-half totals as ceiling value
+  const sorted2 = [...totals].sort((a,b)=>a-b);
+  const median  = sorted2.length%2===0
+    ? (sorted2[sorted2.length/2-1]+sorted2[sorted2.length/2])/2
+    : sorted2[Math.floor(sorted2.length/2)];
+
+  return { ceiling: hasCeiling ? parseFloat(median.toFixed(2)) : null, avgDpk, n: entries.length };
+}
+
+// ── STATISTICS ENGINE ──────────────────────────────────────────────────────
+function computeSuggestions(){
+  const {staffId, procedure} = S.session;
+  const w = parseFloat(S.session.weightConfirmed || S.session.weight);
+  if(!staffId || !procedure || !w) return null;
+
+  const relevant = S.cases.filter(c => c.staffId === staffId);
+  const byProc   = relevant.filter(c => c.procedure === procedure);
+  const source   = byProc.length >= 2 ? byProc : relevant;
+  if(source.length < 3) return null;
+
+  const tc = {};
+  source.forEach(c=>{ if(c.technique) tc[c.technique]=(tc[c.technique]||0)+1; });
+  const topTech = Object.entries(tc).sort((a,b)=>b[1]-a[1])[0]?.[0];
+
+  const phaseData = {};
+  PHASES.forEach(p => {
+    const medMap = {};
+    source.forEach(c => {
+      ((c.phases&&c.phases[p.key])||[]).forEach(m => {
+        if(!medMap[m.name]) medMap[m.name]={dpk:[],total:[],unit:m.unit};
+        if(m.dosePerKg) medMap[m.name].dpk.push(parseFloat(m.dosePerKg));
+        if(m.totalDose) medMap[m.name].total.push(parseFloat(m.totalDose));
+      });
+    });
+
+    phaseData[p.key] = Object.entries(medMap).map(([name,d])=>{
+      const analysis = analyzedrug_full(staffId, p.key, name, w);
+      const freq = d.dpk.length + d.total.length;
+      return {...analysis, name, unit: d.unit, freq};
+    }).sort((a,b)=>b.freq-a.freq).filter(m=>m.freq>0);
+  });
+
+  return {technique:topTech, phases:phaseData, basedOn:source.length, procSpecific:byProc.length>=2};
+}
+
+// Full analysis for suggestion display
+function analyzedrug_full(staffId, phase, drugName, weight){
+  const {ceiling, avgDpk, n} = analyzeDrug(staffId, phase, drugName);
+
+  // Gather totals for fallback average
+  const cases = S.cases.filter(c=>c.staffId===staffId);
+  const totals = [];
+  cases.forEach(c=>{
+    const ph = c.phases&&c.phases[phase];
+    if(!ph) return;
+    const m = ph.find(m=>m.name===drugName);
+    if(m&&m.totalDose) totals.push(parseFloat(m.totalDose));
+  });
+  const avgTotal = totals.length ? totals.reduce((a,b)=>a+b)/totals.length : null;
+
+  let projected = null;
+  let ceilingHit = false;
+  let ceilingVal = null;
+
+  if(avgDpk && weight){
+    const raw = avgDpk * weight;
+    if(ceiling && raw > ceiling){
+      projected  = ceiling;
+      ceilingHit = true;
+      ceilingVal = ceiling;
+    } else {
+      projected = raw;
+    }
+  } else if(ceiling){
+    projected  = ceiling;
+    ceilingHit = true;
+    ceilingVal = ceiling;
+  } else if(avgTotal){
+    projected = avgTotal;
+  }
+
+  return {
+    avgDpk:   avgDpk?.toFixed(2),
+    avgTotal: avgTotal?.toFixed(1),
+    projected: projected!=null ? parseFloat(projected.toFixed(2)) : null,
+    ceiling:   ceilingVal,
+    ceilingHit,
+    n
+  };
+}
+
+// ── AI ─────────────────────────────────────────────────────────────────────
+async function callAI(){
+  if(!S.apiKey){ toast('Configure a chave de API em Config'); return; }
+  const {staffId,procedure,sex,age} = S.session;
+  const w = S.session.weightConfirmed || S.session.weight;
+  if(!staffId||!procedure) return;
+  const staffName = S.staff.find(s=>s.id===staffId)?.name||'Staff';
+  const recent = S.cases.filter(c=>c.staffId===staffId).slice(-15);
+  if(recent.length<3){ toast('Mínimo 3 casos para análise IA'); return; }
+  S.aiLoading=true; S.aiText=''; render();
+  const prompt=`Você é um assistente de anestesiologia. Analise o perfil do staff "${staffName}" e forneça sugestões clínicas objetivas.
+
+PRÓXIMO CASO: ${procedure} | ${sex==='M'?'Masc.':'Fem.'} | ${age} anos | ${w}kg
+
+HISTÓRICO (${recent.length} casos):
+${JSON.stringify(recent.map(c=>({proc:c.procedure,tech:c.technique,meds:PHASES.map(p=>({fase:p.label,drugs:((c.phases&&c.phases[p.key])||[]).map(m=>`${m.name} ${m.dosePerKg?m.dosePerKg+m.unit+'/kg':''}${m.totalDose?' ('+m.totalDose+m.unit+')':''}`.trim())})).filter(p=>p.drugs.length)})),null,1)}
+
+Responda em português. Cubra: técnica provável, indução (com doses para ${w}kg), manutenção, sintomáticos e finalização. Mencione se alguma droga parece ter dose-teto nos padrões do staff. Máximo 7 linhas.`;
+  try{
+    const resp = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01'},body:JSON.stringify({model:'claude-opus-4-5',max_tokens:700,messages:[{role:'user',content:prompt}]})});
+    const data = await resp.json();
+    S.aiText = data.error?'Erro: '+data.error.message:(data.content?.[0]?.text||'Sem resposta.');
+  } catch(e){ S.aiText='Erro de conexão.'; }
+  S.aiLoading=false; render();
+}
+
+// ── ACTIONS ────────────────────────────────────────────────────────────────
+function selectPhase(p){ S.phase=p; S.showMedForm=false; render(); }
+
+function pickDrugChip(name){
+  S.newMed = {name, dosePerKg:'', totalDose:'', unit: inferUnit(name)};
+  S.showMedForm = true; render();
+  setTimeout(()=>document.getElementById('medDpkInput')?.focus(),60);
+}
+
+// Guess sensible default unit for known drugs
+function inferUnit(name){
+  const n = name.toLowerCase();
+  if(['sevoflurano','isoflurano','desflurano'].some(g=>n.includes(g))) return '%';
+  if(['propofol','precedex','remifentanil','noradrenalina','vasopressina','ketamina'].some(g=>n.includes(g)) && S.phase==='maintenance') return 'ml/h';
+  if(n.includes('dipirona')) return 'g';
+  return 'mg';
+}
+
+function addMed(){
+  const {name,dosePerKg,totalDose,unit}=S.newMed;
+  if(!name.trim()){ toast('Informe o nome da medicação'); return; }
+  S.caseForm.phases[S.phase].push({id:Date.now().toString(),name:name.trim(),dosePerKg,totalDose,unit});
+  recordDrug(S.phase, name.trim());
+  S.newMed={name:'',dosePerKg:'',totalDose:'',unit:'mg'};
+  S.showMedForm=false;
+  persist(); render();
+}
+
+function removeMed(phase,id){ S.caseForm.phases[phase]=S.caseForm.phases[phase].filter(m=>m.id!==id); render(); }
+
+function saveCase(){
+  const {staffId,sex,age,procedure}=S.session;
+  const w=S.session.weightConfirmed||S.session.weight;
+  if(!staffId||!procedure){ toast('Selecione staff e procedimento'); return; }
+  S.cases.push({id:Date.now().toString(),date:new Date().toISOString().split('T')[0],staffId,sex,age,weight:w,procedure,technique:S.caseForm.technique,phases:JSON.parse(JSON.stringify(S.caseForm.phases)),notes:S.caseForm.notes});
+  persist();
+  S.caseForm={technique:'',phases:{induction:[],maintenance:[],symptomatics:[],finalization:[]},notes:''};
+  S.session={...S.session,sex:'M',age:'',weight:'',weightConfirmed:'',procedure:'',newProc:''};
+  S.aiText=''; S.showMedForm=false;
+  toast('✓ Caso salvo'); render();
+}
+
+function confirmWeight(){ S.session.weightConfirmed=S.session.weight; document.activeElement?.blur(); render(); }
+function addCustomProc(){ const p=S.session.newProc.trim(); if(!p) return; if(!S.customProcedures.includes(p)) S.customProcedures.push(p); S.session.procedure=p; S.session.newProc=''; S.showNewProc=false; persist(); render(); }
+function addStaff(){ const n=S.newStaff.trim(); if(!n) return; S.staff.push({id:Date.now().toString(),name:n}); S.newStaff=''; persist(); render(); toast('Staff adicionado'); }
+function removeStaff(id){ const c=S.cases.filter(x=>x.staffId===id).length; if(!confirm(`Remover staff?${c?'\n\n'+c+' caso(s) serão mantidos no histórico.':''}`)) return; S.staff=S.staff.filter(s=>s.id!==id); persist(); render(); }
+function deleteCase(id){ if(!confirm('Remover este caso?')) return; S.cases=S.cases.filter(c=>c.id!==id); persist(); toast('Caso removido'); render(); }
+function setTheme(hue){ S.themeHue=hue; applyTheme(hue); persist(); render(); }
+function setTab(t){ S.tab=t; document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active')); document.getElementById('tab-'+t).classList.add('active'); render(); }
+function handleProcChange(val){ if(val==='__new__'){ S.session.procedure='__new__'; S.showNewProc=true; render(); setTimeout(()=>document.getElementById('newProcInput')?.focus(),50); } else { S.session.procedure=val; S.showNewProc=false; S.aiText=''; render(); } }
+
+function exportData(){ const blob=new Blob([JSON.stringify({staff:S.staff,customProcedures:S.customProcedures,cases:S.cases,apiKey:S.apiKey,themeHue:S.themeHue,learnedDrugs:S.learnedDrugs},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`anestesia_backup_${new Date().toISOString().split('T')[0]}.json`; a.click(); toast('Backup exportado'); }
+function importData(e){ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>{ try{ const d=JSON.parse(ev.target.result); if(d.staff) S.staff=d.staff; if(d.customProcedures) S.customProcedures=d.customProcedures; if(d.cases) S.cases=d.cases; if(d.apiKey) S.apiKey=d.apiKey; if(d.themeHue!=null){S.themeHue=d.themeHue;applyTheme(S.themeHue);} if(d.learnedDrugs) S.learnedDrugs=d.learnedDrugs; persist(); toast('✓ Dados importados'); render(); }catch{ alert('Arquivo inválido.'); } }; r.readAsText(f); e.target.value=''; }
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function render(){
+  const c=document.getElementById('content'); if(!c) return;
+  switch(S.tab){ case 'session':c.innerHTML=renderSession();break; case 'history':c.innerHTML=renderHistory();break; case 'config':c.innerHTML=renderConfig();break; }
+  document.getElementById('headerSub').textContent=`${S.cases.length} casos · ${S.staff.length} staff`;
+}
+
+function renderSession(){
+  const {staffId,sex,age,weight,weightConfirmed,procedure,newProc}=S.session;
+  const sugg=computeSuggestions();
+  const staffOpts=S.staff.map(s=>`<option value="${s.id}"${staffId===s.id?' selected':''}>${s.name}</option>`).join('');
+  const procOpts=allProcs().map(p=>`<option value="${p}"${procedure===p?' selected':''}>${p}</option>`).join('');
+  const techChips=TECHNIQUES.map(t=>`<div class="chip${S.caseForm.technique===t?' selected':''}" onclick="S.caseForm.technique=S.caseForm.technique==='${t.replace(/'/g,"\\'")}' ? '' : '${t.replace(/'/g,"\\'")}';render()">${t}</div>`).join('');
+
+  const phaseTabs=PHASES.map(p=>{ const n=S.caseForm.phases[p.key].length; return `<button class="phase-tab${S.phase===p.key?' active':''}${n>0?' has-meds':''}" onclick="selectPhase('${p.key}')">${p.label}${n?`<span class="phase-badge">${n}</span>`:''}</button>`; }).join('');
+
+  const ph=S.phase;
+  const allDrugs=drugListForPhase(ph);
+  const usedNames=S.caseForm.phases[ph].map(m=>m.name);
+  const chips=allDrugs.filter(d=>!usedNames.includes(d)).slice(0,14).map(d=>`<div class="drug-chip" onclick="pickDrugChip('${d.replace(/'/g,"\\'")}')">+ ${d}</div>`).join('');
+
+  const medsHTML=S.caseForm.phases[ph].map(m=>`
+    <div class="med-item">
+      <span class="med-name">${m.name}</span>
+      ${m.dosePerKg?`<span class="badge badge-green">${m.dosePerKg} ${m.unit}/kg</span>`:''}
+      ${m.totalDose?`<span class="badge badge-blue">${m.totalDose} ${m.unit}</span>`:''}
+      <button class="btn-icon" onclick="removeMed('${ph}','${m.id}')">×</button>
+    </div>`).join('');
+
+  const unitOpts=ALL_UNITS.map(u=>`<option value="${u}"${S.newMed.unit===u?' selected':''}>${u}</option>`).join('');
+  const medFormHTML=S.showMedForm?`
+    <div class="med-input-area">
+      <div class="field" style="margin-bottom:8px"><label>Medicação</label><input type="text" value="${S.newMed.name}" oninput="S.newMed.name=this.value" placeholder="Nome"></div>
+      <div class="field" style="margin-bottom:8px"><label>Unidade</label><select onchange="S.newMed.unit=this.value">${unitOpts}</select></div>
+      <div class="grid2" style="margin-bottom:8px">
+        <div class="field" style="margin-bottom:0"><label>Dose/kg (ou dose/h)</label><input id="medDpkInput" type="number" inputmode="decimal" placeholder="ex: 0.2" value="${S.newMed.dosePerKg}" oninput="S.newMed.dosePerKg=this.value"></div>
+        <div class="field" style="margin-bottom:0"><label>Dose total</label><input type="number" inputmode="decimal" placeholder="ex: 10" value="${S.newMed.totalDose}" oninput="S.newMed.totalDose=this.value"></div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-primary btn-sm" style="flex:1" onclick="addMed()">✓ Confirmar</button>
+        <button class="btn btn-sm" onclick="S.showMedForm=false;render()">Cancelar</button>
+      </div>
+    </div>`:`<button class="btn btn-sm" style="width:100%;margin-bottom:8px" onclick="S.showMedForm=true;S.newMed={name:'',dosePerKg:'',totalDose:'',unit:'mg'};render()">+ Adicionar manualmente</button>`;
+
+  // Suggestions
+  let suggHTML='';
+  if(sugg){
+    const rows=PHASES.flatMap(p=>{
+      const meds=(sugg.phases[p.key]||[]).slice(0,4);
+      return meds.map(m=>{
+        if(m.projected==null) return '';
+        const ceilNote=m.ceilingHit?`<span class="ceiling-note">↑ teto ${m.ceiling}${m.unit}</span>`:'';
+        const nNote=m.n>=CEIL_MIN_CASES&&m.ceiling?'':m.n<CEIL_MIN_CASES?`<span style="font-size:9px;color:var(--text3);margin-left:2px">(${m.n}cx)</span>`:'';
+        return `<div class="sugg-row">
+          <div class="sugg-left">
+            <span class="sugg-phase-label ${p.color}" style="opacity:.75">${p.label.slice(0,3)}</span>
+            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.name}</span>${nNote}
+          </div>
+          <div class="sugg-right">
+            <span class="sugg-dose">${m.projected} ${m.unit}</span>
+            ${ceilNote}
+            ${m.avgDpk&&!m.ceilingHit?`<span style="font-size:10px;color:var(--text3)">${m.avgDpk}/kg</span>`:''}
+          </div>
+        </div>`;
+      });
+    }).join('');
+
+    suggHTML=`<div class="suggestion-box">
+      <div class="suggestion-header">
+        <span class="ai-label">⬡ ${sugg.basedOn} casos${sugg.procSpecific?' (específico)':''}</span>
+        <button class="btn btn-sm badge-blue" onclick="callAI()" style="padding:3px 10px;font-size:10px" ${S.aiLoading?'disabled':''}>
+          ${S.aiLoading?'<div class="spinner"></div>':'IA ↗'}
+        </button>
+      </div>
+      ${sugg.technique?`<div class="sugg-row"><div class="sugg-left">Técnica</div><div class="sugg-right"><span class="badge badge-green">${sugg.technique}</span></div></div>`:''}
+      ${rows}
+    </div>`;
+  }
+
+  const aiHTML=S.aiText?`<div class="ai-box"><div class="ai-box-label">Análise IA</div>${S.aiText.replace(/\n/g,'<br>')}</div>`:'';
+
+  return `
+    ${S.staff.length===0?'<div class="warning-bar">Cadastre um staff na aba Config para começar.</div>':''}
+    <div class="card">
+      <div class="section-label">Staff e paciente</div>
+      <div class="field"><label>Staff</label>
+        <select onchange="S.session.staffId=this.value;S.aiText='';render()">
+          <option value="">Selecionar staff...</option>${staffOpts}
+        </select>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Sexo</label>
+          <select onchange="S.session.sex=this.value">
+            <option value="M"${sex==='M'?' selected':''}>Masc.</option>
+            <option value="F"${sex==='F'?' selected':''}>Fem.</option>
+          </select>
+        </div>
+        <div class="field"><label>Idade</label><input type="number" inputmode="numeric" placeholder="anos" value="${age}" oninput="S.session.age=this.value"></div>
+        <div class="field">
+          <label>Peso${weightConfirmed?` <span class="badge badge-green" style="padding:1px 5px;font-size:9px">✓ ${weightConfirmed}kg</span>`:''}</label>
+          <div class="weight-row">
+            <input type="number" inputmode="decimal" placeholder="kg" value="${weight}" oninput="S.session.weight=this.value" onkeydown="if(event.key==='Enter'){confirmWeight();event.preventDefault()}">
+            <button class="weight-confirm" onclick="confirmWeight()">Ok</button>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Procedimento</label>
+        <select onchange="handleProcChange(this.value)">
+          <option value="">Selecionar...</option>${procOpts}
+          <option value="__new__">+ Novo procedimento...</option>
+        </select>
+      </div>
+      ${procedure==='__new__'||S.showNewProc?`<div style="display:flex;gap:6px;margin-top:2px"><input id="newProcInput" type="text" style="flex:1;padding:8px 10px;border:.5px solid var(--border2);border-radius:var(--rs);background:var(--bg3);color:var(--text);font-size:13px;font-family:var(--sans);outline:none" placeholder="Nome do procedimento" value="${newProc}" oninput="S.session.newProc=this.value" onkeydown="if(event.key==='Enter')addCustomProc()"><button class="btn btn-primary btn-sm" onclick="addCustomProc()">Adicionar</button></div>`:''}
+    </div>
+
+    ${suggHTML}${aiHTML}
+
+    <div class="card">
+      <div class="section-label">Técnica anestésica</div>
+      <div class="chips">${techChips}</div>
+      <hr class="divider">
+      <div class="section-label">Medicações por fase</div>
+      <div class="phase-tabs">${phaseTabs}</div>
+      <div class="drug-suggestions">${chips}</div>
+      ${medsHTML}
+      ${medFormHTML}
+      <hr class="divider">
+      <div class="field"><label>Observações / intercorrências</label><textarea placeholder="Hipotensão, bradicardia, alergias..." oninput="S.caseForm.notes=this.value">${S.caseForm.notes}</textarea></div>
+      <button class="btn btn-primary btn-full" onclick="saveCase()">Salvar caso</button>
+    </div>`;
+}
+
+function renderHistory(){
+  const staffOpts=S.staff.map(s=>`<option value="${s.id}"${S.histFilter===s.id?' selected':''}>${s.name}</option>`).join('');
+  const filtered=S.histFilter?S.cases.filter(c=>c.staffId===S.histFilter):S.cases;
+  const sorted=[...filtered].reverse();
+  const casesHTML=sorted.length===0?`<div class="empty">Nenhum caso registrado.</div>`:sorted.map(c=>{
+    const st=S.staff.find(x=>x.id===c.staffId);
+    const allMeds=PHASES.flatMap(p=>((c.phases&&c.phases[p.key])||[]).map(m=>({...m,phaseColor:p.color})));
+    const medsHTML=allMeds.map(m=>`<span class="badge ${m.phaseColor}" style="font-size:10px">${m.name}${m.totalDose?' '+m.totalDose+m.unit:''}</span>`).join('');
+    return `<div class="case-card">
+      <div class="avatar">${initials(st?.name)}</div>
+      <div class="case-info">
+        <div class="case-top"><span class="case-staff">${st?.name||'(removido)'}</span><div style="display:flex;align-items:center;gap:6px"><span class="case-date">${c.date}</span><button class="btn-icon" style="font-size:13px" onclick="deleteCase('${c.id}')">×</button></div></div>
+        <div class="case-proc">${c.procedure}</div>
+        <div class="case-tags">
+          ${c.sex?`<span class="tag">${c.sex}</span>`:''}${c.age?`<span class="tag">${c.age}a</span>`:''}${c.weight?`<span class="tag">${c.weight}kg</span>`:''}
+          ${c.technique?`<span class="badge badge-green">${c.technique}</span>`:''}
+        </div>
+        ${medsHTML?`<div class="case-meds">${medsHTML}</div>`:''}
+        ${c.notes?`<div style="font-size:11px;color:var(--text3);margin-top:4px;font-style:italic">${c.notes}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="filter-row"><select onchange="S.histFilter=this.value;render()"><option value="">Todos (${S.cases.length} casos)</option>${staffOpts}</select></div>${casesHTML}`;
+}
+
+function renderConfig(){
+  const staffHTML=S.staff.length===0?`<div style="font-size:12px;color:var(--text3);padding:8px 0">Nenhum staff cadastrado.</div>`:S.staff.map(s=>{ const n=S.cases.filter(c=>c.staffId===s.id).length; return `<div class="staff-item"><div class="avatar">${initials(s.name)}</div><span style="flex:1;font-size:13px">${s.name}</span><span class="tag" style="margin-right:6px">${n}cx</span><button class="btn btn-danger btn-sm" onclick="removeStaff('${s.id}')">Remover</button></div>`; }).join('');
+  const totalMeds=S.cases.reduce((acc,c)=>acc+PHASES.reduce((a,p)=>a+((c.phases&&c.phases[p.key])||[]).length,0),0);
+  const learnedCount=Object.values(S.learnedDrugs).reduce((a,b)=>a+b.length,0);
+
+  // Ceiling summary per staff
+  let ceilSummary='';
+  if(S.cases.length>=CEIL_MIN_CASES){
+    const lines=[];
+    S.staff.forEach(st=>{
+      PHASES.forEach(p=>{
+        const drugs=drugListForPhase(p.key);
+        drugs.forEach(drug=>{
+          const {ceiling,n}=analyzeDrug(st.id,p.key,drug);
+          if(ceiling!=null) lines.push(`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:.5px solid var(--border)"><span><span style="color:var(--text3);font-size:10px">${st.name} · </span>${drug}</span><span class="badge badge-amber" style="font-size:10px">teto ${ceiling} · ${n}cx</span></div>`);
+        });
+      });
+    });
+    if(lines.length) ceilSummary=`<div class="card"><div class="section-label">Tetos aprendidos</div>${lines.join('')}</div>`;
+  }
+
+  const swatches=THEMES.map(t=>`<div class="swatch${S.themeHue===t.hue?' active':''}" title="${t.name}" style="background:hsl(${t.hue===0?'0,0%,50%':t.hue+',65%,40%'})" onclick="setTheme(${t.hue})"></div>`).join('');
+
+  return `
+    <div class="card">
+      <div class="section-label">Staff</div>
+      <div class="scroll-area">${staffHTML}</div>
+      <hr class="divider">
+      <div style="display:flex;gap:6px">
+        <input type="text" style="flex:1;padding:8px 10px;border:.5px solid var(--border2);border-radius:var(--rs);background:var(--bg3);color:var(--text);font-size:13px;font-family:var(--sans);outline:none" placeholder="Nome do staff" value="${S.newStaff}" oninput="S.newStaff=this.value" onkeydown="if(event.key==='Enter')addStaff()">
+        <button class="btn btn-primary btn-sm" onclick="addStaff()">Adicionar</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-label">Estatísticas</div>
+      <div class="grid3">
+        <div class="stat-card"><div class="stat-num">${S.cases.length}</div><div class="stat-label">casos</div></div>
+        <div class="stat-card"><div class="stat-num">${new Set(S.cases.map(c=>c.procedure)).size}</div><div class="stat-label">procs.</div></div>
+        <div class="stat-card"><div class="stat-num">${totalMeds}</div><div class="stat-label">drogas</div></div>
+      </div>
+      ${learnedCount?`<div style="font-size:11px;color:var(--text3);margin-top:8px">${learnedCount} medicação(ões) aprendida(s)</div>`:''}
+    </div>
+    ${ceilSummary}
+    <div class="card">
+      <div class="section-label">Tema de cores</div>
+      <div class="theme-grid">${swatches}</div>
+    </div>
+    <div class="card">
+      <div class="section-label">Integração IA (opcional)</div>
+      <div class="info-bar">Chave da API Anthropic para análises em linguagem natural. Salva apenas localmente.</div>
+      <div class="field"><label>Chave API (sk-ant-...)</label><input type="password" placeholder="sk-ant-api03-..." value="${S.apiKey}" oninput="S.apiKey=this.value;persist()"></div>
+      ${S.apiKey?`<span class="badge badge-green">✓ Configurada</span>`:`<div style="font-size:11px;color:var(--text3)">Sem chave — apenas sugestões estatísticas</div>`}
+    </div>
+    <div class="card">
+      <div class="section-label">Backup</div>
+      <div class="info-bar">Dados no localStorage. Exporte antes de trocar de celular ou limpar o Safari.</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-sm" style="flex:1" onclick="exportData()">Exportar JSON</button>
+        <label class="btn btn-sm" style="flex:1;cursor:pointer">Importar JSON<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+      </div>
+    </div>
+    <div class="card pwa-hide">
+      <div class="section-label">Instalar como app</div>
+      <div class="info-bar"><strong>Android:</strong> Menu Chrome → Adicionar à tela inicial<br><strong>iPhone:</strong> Safari → Compartilhar → Adicionar à Tela de Início</div>
+    </div>`;
+}
+
+// ── PWA ────────────────────────────────────────────────────────────────────
+function injectManifest(){
+  const m={name:'AnestesIA',short_name:'AnestesIA',start_url:'.',display:'standalone',background_color:'#090d0b',theme_color:'#090d0b',icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%23090d0b'/%3E%3Ccircle cx='96' cy='96' r='42' fill='%231D9E75'/%3E%3Ccircle cx='96' cy='96' r='22' fill='%23090d0b'/%3E%3C/svg%3E",sizes:'192x192',type:'image/svg+xml'}]};
+  const l=document.createElement('link'); l.rel='manifest'; l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'})); document.head.appendChild(l);
+}
+function registerSW(){
+  if(!('serviceWorker' in navigator)) return;
+  // Versioned cache name forces update on next visit
+  const sw=`const C='anestesia-cache-v4';self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.add('/')));self.skipWaiting();});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==C).map(k=>caches.delete(k)))));});self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>r))));`;
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
+}
+
+loadData(); applyTheme(S.themeHue); injectManifest(); registerSW(); render();
+</script>
+</body>
+</html>
