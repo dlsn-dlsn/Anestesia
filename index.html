@@ -2,588 +2,678 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#0a0f0d">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AnestesIA">
-<meta name="description" content="Assistente clínico de preferências anestésicas">
 <title>AnestesIA</title>
-<link rel="manifest" href="#" id="manifest-placeholder">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;600&display=swap');
 
-  :root {
-    --bg: #0a0f0d;
-    --bg2: #111812;
-    --bg3: #192118;
-    --bg4: #1e2a22;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.14);
-    --text: #e8f0ea;
-    --text2: #8fa898;
-    --text3: #5a7063;
-    --accent: #1D9E75;
-    --accent2: #0F6E56;
-    --accent-dim: rgba(29,158,117,0.15);
-    --accent-dim2: rgba(29,158,117,0.08);
-    --blue: #378ADD;
-    --blue-dim: rgba(55,138,221,0.15);
-    --amber: #EF9F27;
-    --amber-dim: rgba(239,159,39,0.12);
-    --red: #E24B4A;
-    --red-dim: rgba(226,75,74,0.12);
-    --coral: #D85A30;
-    --coral-dim: rgba(216,90,48,0.12);
-    --radius: 10px;
-    --radius-sm: 6px;
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'Syne', system-ui, sans-serif;
-  }
+:root {
+  --hue: 158;
+  --accent: hsl(var(--hue), 69%, 37%);
+  --accent2: hsl(var(--hue), 72%, 25%);
+  --accent-glow: hsl(var(--hue), 69%, 37%);
+  --accent-dim: hsla(var(--hue), 69%, 37%, 0.13);
+  --accent-dim2: hsla(var(--hue), 69%, 37%, 0.07);
+  --accent-border: hsla(var(--hue), 69%, 37%, 0.35);
+  --accent-text: hsl(var(--hue), 60%, 68%);
+  --bg:  hsl(var(--hue), 25%, 5%);
+  --bg2: hsl(var(--hue), 20%, 8%);
+  --bg3: hsl(var(--hue), 18%, 11%);
+  --bg4: hsl(var(--hue), 16%, 14%);
+  --border:  hsla(var(--hue), 15%, 100%, 0.08);
+  --border2: hsla(var(--hue), 15%, 100%, 0.14);
+  --text:  hsl(var(--hue), 20%, 92%);
+  --text2: hsl(var(--hue), 10%, 58%);
+  --text3: hsl(var(--hue), 10%, 38%);
+  --blue: #378ADD; --blue-dim: rgba(55,138,221,0.13); --blue-border: rgba(55,138,221,0.3); --blue-text: #85B7EB;
+  --amber: #EF9F27; --amber-dim: rgba(239,159,39,0.11); --amber-border: rgba(239,159,39,0.28); --amber-text: #EFC97A;
+  --red: #E24B4A; --red-dim: rgba(226,75,74,0.11); --red-border: rgba(226,75,74,0.28);
+  --coral: #D85A30; --coral-dim: rgba(216,90,48,0.11); --coral-border: rgba(216,90,48,0.28); --coral-text: #F0997B;
+  --purple: #8B6FD4; --purple-dim: rgba(139,111,212,0.11); --purple-border: rgba(139,111,212,0.28); --purple-text: #B8A2E8;
+  --r: 10px; --rs: 6px;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'Syne', system-ui, sans-serif;
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html { background: var(--bg); height: 100%; }
-  body { font-family: var(--sans); color: var(--text); background: var(--bg); min-height: 100vh; min-height: 100dvh; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);height:100%}
+body{font-family:var(--sans);color:var(--text);background:var(--bg);min-height:100vh;min-height:100dvh}
+#app{max-width:520px;margin:0 auto;padding:0 0 5rem;min-height:100dvh}
 
-  #app { max-width: 520px; margin: 0 auto; padding: 0 0 5rem; min-height: 100dvh; }
+.header{padding:1.25rem 1rem 0;display:flex;align-items:center;gap:10px}
+.logo-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow);flex-shrink:0;transition:background 0.4s,box-shadow 0.4s}
+.logo-title{font-size:18px;font-weight:600;letter-spacing:-0.02em}
+.logo-sub{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:1px}
 
-  /* Header */
-  .header { padding: 1.25rem 1rem 0; display: flex; align-items: center; gap: 10px; }
-  .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); flex-shrink: 0; }
-  .logo-title { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
-  .logo-sub { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-top: 1px; }
+.nav{display:flex;gap:0;margin:1.25rem 1rem 0;background:var(--bg3);border-radius:var(--r);padding:3px;border:0.5px solid var(--border)}
+.nav button{flex:1;padding:8px;border:none;background:transparent;border-radius:8px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;transition:all 0.18s;font-family:var(--sans)}
+.nav button.active{background:var(--bg4);color:var(--text);border:0.5px solid var(--border2)}
 
-  /* Nav */
-  .nav { display: flex; gap: 0; margin: 1.25rem 1rem 0; background: var(--bg3); border-radius: var(--radius); padding: 3px; border: 0.5px solid var(--border); }
-  .nav button { flex: 1; padding: 8px; border: none; background: transparent; border-radius: 8px; font-size: 12px; font-weight: 500; color: var(--text3); cursor: pointer; transition: all 0.18s; font-family: var(--sans); letter-spacing: 0.01em; }
-  .nav button.active { background: var(--bg4); color: var(--text); border: 0.5px solid var(--border2); }
+.content{padding:1rem}
+.card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem;margin-bottom:10px}
+.card-surface{background:var(--bg3);border-radius:var(--rs);padding:.75rem 1rem}
+.section-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:10px}
+.divider{border:none;border-top:0.5px solid var(--border);margin:.75rem 0}
 
-  /* Content */
-  .content { padding: 1rem; }
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;color:var(--text3);margin-bottom:4px;letter-spacing:.02em}
+.field input,.field select,.field textarea{width:100%;padding:9px 11px;border:0.5px solid var(--border2);border-radius:var(--rs);background:var(--bg3);color:var(--text);font-size:13px;font-family:var(--sans);appearance:none;-webkit-appearance:none;transition:border-color 0.15s;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7063' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.field textarea{resize:vertical;min-height:60px}
 
-  /* Cards */
-  .card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.1rem; margin-bottom: 10px; }
-  .card-surface { background: var(--bg3); border-radius: var(--radius-sm); padding: 0.75rem 1rem; }
+.weight-row{display:flex;gap:6px;align-items:flex-end}
+.weight-row input{flex:1}
+.weight-confirm{padding:9px 14px;border-radius:var(--rs);border:0.5px solid var(--accent-border);background:var(--accent-dim);color:var(--accent-text);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--sans);white-space:nowrap;transition:background 0.15s}
+.weight-confirm:hover{background:var(--accent-dim2)}
 
-  /* Labels */
-  .section-label { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); margin-bottom: 10px; }
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 
-  /* Fields */
-  .field { margin-bottom: 10px; }
-  .field label { display: block; font-size: 11px; color: var(--text3); margin-bottom: 4px; letter-spacing: 0.02em; }
-  .field input, .field select, .field textarea {
-    width: 100%; padding: 9px 11px;
-    border: 0.5px solid var(--border2);
-    border-radius: var(--radius-sm);
-    background: var(--bg3);
-    color: var(--text);
-    font-size: 13px;
-    font-family: var(--sans);
-    appearance: none;
-    -webkit-appearance: none;
-    transition: border-color 0.15s;
-    outline: none;
-  }
-  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
-  .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7063' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-  .field textarea { resize: vertical; min-height: 60px; }
+.btn{padding:9px 16px;border-radius:var(--rs);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--sans);transition:all 0.15s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:hover{background:var(--bg4)}
+.btn:active{transform:scale(0.98)}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);transition:background 0.4s,border-color 0.4s}
+.btn-primary:hover{background:var(--accent2);border-color:var(--accent2)}
+.btn-danger{background:var(--red-dim);color:var(--red);border-color:var(--red-border)}
+.btn-sm{padding:5px 10px;font-size:11px}
+.btn-full{width:100%}
+.btn-icon{padding:4px 8px;background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
+.btn-icon:hover{color:var(--red)}
 
-  /* Grids */
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:500;font-family:var(--mono);background:var(--bg4);border:0.5px solid var(--border);color:var(--text2)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:500}
+.badge-green{background:var(--accent-dim);border:0.5px solid var(--accent-border);color:var(--accent-text)}
+.badge-blue{background:var(--blue-dim);border:0.5px solid var(--blue-border);color:var(--blue-text)}
+.badge-amber{background:var(--amber-dim);border:0.5px solid var(--amber-border);color:var(--amber-text)}
+.badge-coral{background:var(--coral-dim);border:0.5px solid var(--coral-border);color:var(--coral-text)}
+.badge-purple{background:var(--purple-dim);border:0.5px solid var(--purple-border);color:var(--purple-text)}
 
-  /* Buttons */
-  .btn { padding: 9px 16px; border-radius: var(--radius-sm); border: 0.5px solid var(--border2); background: var(--bg3); color: var(--text); font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--sans); transition: all 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-  .btn:hover { background: var(--bg4); border-color: var(--border2); }
-  .btn:active { transform: scale(0.98); }
-  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
-  .btn-ghost { background: transparent; color: var(--text2); border-color: transparent; }
-  .btn-danger { background: var(--red-dim); color: var(--red); border-color: rgba(226,75,74,0.3); }
-  .btn-sm { padding: 5px 10px; font-size: 11px; }
-  .btn-full { width: 100%; }
-  .btn-icon { padding: 5px 8px; background: transparent; border: none; color: var(--text3); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
-  .btn-icon:hover { color: var(--red); }
+/* Phase tabs */
+.phase-tabs{display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:var(--r);padding:3px;border:0.5px solid var(--border)}
+.phase-tab{flex:1;padding:7px 4px;border:none;background:transparent;border-radius:8px;font-size:11px;font-weight:500;color:var(--text3);cursor:pointer;transition:all 0.18s;font-family:var(--sans);text-align:center}
+.phase-tab.active{background:var(--bg4);color:var(--text);border:0.5px solid var(--border2)}
+.phase-tab.has-meds{color:var(--accent-text)}
+.phase-tab.active.has-meds{color:var(--accent-text)}
 
-  /* Tags & badges */
-  .tag { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 500; font-family: var(--mono); background: var(--bg4); border: 0.5px solid var(--border); color: var(--text2); }
-  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
-  .badge-green { background: var(--accent-dim); border: 0.5px solid rgba(29,158,117,0.3); color: #5DCAA5; }
-  .badge-blue { background: var(--blue-dim); border: 0.5px solid rgba(55,138,221,0.3); color: #85B7EB; }
-  .badge-amber { background: var(--amber-dim); border: 0.5px solid rgba(239,159,39,0.3); color: var(--amber); }
-  .badge-coral { background: var(--coral-dim); border: 0.5px solid rgba(216,90,48,0.3); color: #F0997B; }
+.phase-badge{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--accent);color:#fff;font-size:9px;font-weight:600;line-height:14px;text-align:center;margin-left:3px;vertical-align:middle}
 
-  /* Divider */
-  .divider { border: none; border-top: 0.5px solid var(--border); margin: 0.75rem 0; }
+/* Med items */
+.med-item{display:flex;align-items:center;gap:6px;padding:8px 10px;border:0.5px solid var(--border);border-radius:var(--rs);margin-bottom:5px;background:var(--bg3)}
+.med-name{flex:1;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  /* Med items */
-  .med-item { display: flex; align-items: center; gap: 6px; padding: 8px 10px; border: 0.5px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 5px; background: var(--bg3); }
-  .med-name { flex: 1; font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Drug autocomplete chips */
+.drug-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.drug-chip{padding:5px 10px;border:0.5px solid var(--border2);border-radius:16px;font-size:11px;color:var(--text2);cursor:pointer;background:var(--bg3);transition:all 0.15s;font-family:var(--sans)}
+.drug-chip:hover{border-color:var(--accent);color:var(--accent-text);background:var(--accent-dim)}
 
-  /* Suggestion box */
-  .suggestion-box { border: 0.5px solid rgba(29,158,117,0.4); border-radius: var(--radius); background: var(--accent-dim2); padding: 1rem; margin-bottom: 10px; }
-  .suggestion-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-  .ai-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
-  .suggestion-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 0.5px solid rgba(29,158,117,0.15); font-size: 12px; }
-  .suggestion-row:last-child { border-bottom: none; }
-  .suggestion-dose { font-family: var(--mono); color: #5DCAA5; font-size: 12px; }
+/* Technique chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:6px 12px;border:0.5px solid var(--border2);border-radius:20px;font-size:12px;color:var(--text2);cursor:pointer;transition:all 0.15s;background:var(--bg3)}
+.chip:hover{border-color:var(--accent);color:var(--accent-text)}
+.chip.selected{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent-text)}
 
-  /* AI analysis box */
-  .ai-box { background: var(--bg3); border: 0.5px solid var(--blue-dim); border-radius: var(--radius); padding: 1rem; margin-bottom: 10px; font-size: 13px; line-height: 1.65; color: var(--text2); }
-  .ai-box-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--blue); margin-bottom: 6px; }
+/* Suggestion box */
+.suggestion-box{border:0.5px solid var(--accent-border);border-radius:var(--r);background:var(--accent-dim2);padding:1rem;margin-bottom:10px}
+.suggestion-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ai-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--accent)}
+.sugg-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:0.5px solid var(--accent-border);font-size:12px}
+.sugg-row:last-child{border-bottom:none}
+.sugg-dose{font-family:var(--mono);color:var(--accent-text);font-size:12px}
+.sugg-phase-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;padding:1px 5px;border-radius:3px;margin-right:5px}
 
-  /* Staff avatar */
-  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--blue-dim); border: 0.5px solid rgba(55,138,221,0.3); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--blue); flex-shrink: 0; font-family: var(--mono); }
+/* AI box */
+.ai-box{background:var(--bg3);border:0.5px solid var(--blue-border);border-radius:var(--r);padding:1rem;margin-bottom:10px;font-size:13px;line-height:1.65;color:var(--text2)}
+.ai-box-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:6px}
 
-  /* Case history card */
-  .case-card { display: flex; gap: 10px; align-items: flex-start; padding: 0.9rem 1.1rem; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; }
-  .case-info { flex: 1; min-width: 0; }
-  .case-top { display: flex; justify-content: space-between; align-items: flex-start; }
-  .case-staff { font-size: 13px; font-weight: 500; }
-  .case-date { font-size: 11px; color: var(--text3); font-family: var(--mono); }
-  .case-proc { font-size: 12px; color: var(--text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .case-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-  .case-meds { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+/* Avatar */
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--blue-dim);border:0.5px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--blue);flex-shrink:0;font-family:var(--mono)}
 
-  /* Stats */
-  .stat-card { background: var(--bg3); border-radius: var(--radius-sm); padding: 0.75rem; text-align: center; }
-  .stat-num { font-size: 24px; font-weight: 600; font-family: var(--mono); color: var(--text); }
-  .stat-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+/* Case card */
+.case-card{display:flex;gap:10px;align-items:flex-start;padding:.9rem 1.1rem;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r);margin-bottom:8px}
+.case-info{flex:1;min-width:0}
+.case-top{display:flex;justify-content:space-between;align-items:flex-start}
+.case-staff{font-size:13px;font-weight:500}
+.case-date{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.case-proc{font-size:12px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.case-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.case-meds{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
 
-  /* Loading spinner */
-  .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* Stat card */
+.stat-card{background:var(--bg3);border-radius:var(--rs);padding:.75rem;text-align:center}
+.stat-num{font-size:24px;font-weight:600;font-family:var(--mono);color:var(--text)}
+.stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
 
-  /* Toast */
-  .toast { position: fixed; bottom: 5.5rem; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 500; z-index: 100; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; }
-  .toast.show { opacity: 1; }
+/* Theme swatches */
+.theme-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.swatch{width:36px;height:36px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform 0.15s,border-color 0.15s;position:relative}
+.swatch:hover{transform:scale(1.1)}
+.swatch.active{border-color:var(--text)}
+.swatch::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;opacity:0}
+.swatch.active::after{opacity:1}
 
-  /* Empty state */
-  .empty { text-align: center; padding: 3rem 1rem; color: var(--text3); font-size: 13px; }
-  .empty-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.4; }
+/* Spinner */
+.spinner{width:12px;height:12px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-  /* New med input area */
-  .med-input-area { background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px; margin-bottom: 8px; }
+/* Toast */
+.toast{position:fixed;bottom:5.5rem;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:500;z-index:100;opacity:0;transition:opacity 0.2s,background 0.4s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
 
-  /* API key input */
-  .api-key-row { display: flex; gap: 6px; }
-  .api-key-status { font-size: 11px; margin-top: 4px; }
-
-  /* Staff list item */
-  .staff-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--border); }
-  .staff-item:last-child { border-bottom: none; }
-
-  /* Warning banner */
-  .warning-bar { background: var(--amber-dim); border: 0.5px solid rgba(239,159,39,0.3); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 11px; color: var(--amber); margin-bottom: 10px; }
-
-  /* Filter row */
-  .filter-row { display: flex; gap: 6px; margin-bottom: 10px; }
-  .filter-row select { flex: 1; padding: 7px 28px 7px 10px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); background: var(--bg3); color: var(--text); font-size: 12px; font-family: var(--sans); appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7063' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; outline: none; }
-
-  /* Scrollable */
-  .scroll-area { max-height: 280px; overflow-y: auto; }
-  .scroll-area::-webkit-scrollbar { width: 3px; }
-  .scroll-area::-webkit-scrollbar-track { background: transparent; }
-  .scroll-area::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-
-  /* Technique chip selector */
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip { padding: 6px 12px; border: 0.5px solid var(--border2); border-radius: 20px; font-size: 12px; color: var(--text2); cursor: pointer; transition: all 0.15s; background: var(--bg3); }
-  .chip:hover { border-color: var(--accent); color: var(--accent); }
-  .chip.selected { background: var(--accent-dim); border-color: var(--accent); color: #5DCAA5; }
-
-  /* PWA install prompt */
-  .install-banner { background: var(--blue-dim); border: 0.5px solid rgba(55,138,221,0.3); border-radius: var(--radius-sm); padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-
-  @media (display-mode: standalone) { .pwa-only-hide { display: none; } }
+.empty{text-align:center;padding:3rem 1rem;color:var(--text3);font-size:13px}
+.warning-bar{background:var(--amber-dim);border:0.5px solid var(--amber-border);border-radius:var(--rs);padding:8px 12px;font-size:11px;color:var(--amber-text);margin-bottom:10px}
+.info-bar{font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:8px}
+.staff-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border)}
+.staff-item:last-child{border-bottom:none}
+.filter-row{display:flex;gap:6px;margin-bottom:10px}
+.filter-row select{flex:1;padding:7px 28px 7px 10px;border:0.5px solid var(--border2);border-radius:var(--rs);background:var(--bg3);color:var(--text);font-size:12px;font-family:var(--sans);appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7063' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;outline:none}
+.scroll-area{max-height:260px;overflow-y:auto}
+.scroll-area::-webkit-scrollbar{width:3px}
+.scroll-area::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.med-input-area{background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--rs);padding:10px;margin-bottom:8px}
+.api-key-note{font-size:11px;color:var(--text3);margin-top:4px}
+@media(display-mode:standalone){.pwa-hide{display:none}}
 </style>
 </head>
 <body>
 <div id="app">
   <div class="header">
-    <div class="logo-dot" id="logoStatus"></div>
+    <div class="logo-dot" id="logoDot"></div>
     <div>
       <div class="logo-title">AnestesIA</div>
-      <div class="logo-sub" id="headerSub">carregando...</div>
+      <div class="logo-sub" id="headerSub">0 casos · 0 staff</div>
     </div>
   </div>
   <nav class="nav">
     <button onclick="setTab('session')" id="tab-session" class="active">Sessão</button>
     <button onclick="setTab('history')" id="tab-history">Histórico</button>
-    <button onclick="setTab('config')" id="tab-config">Config</button>
+    <button onclick="setTab('config')"  id="tab-config">Config</button>
   </nav>
   <div class="content" id="content"></div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-const STORAGE_KEY = 'anestesia_v2';
-const TECHNIQUES = [
-  'Geral inalatória','Geral venosa (TIVA)','Geral balanceada',
-  'Raquianestesia','Peridural','CSE (Raqui+Peridural)',
-  'BNP isolado','Sedação + BNP','Sedação consciente','Local + sedação'
-];
-const DEFAULT_PROCEDURES = [
-  'Laparotomia exploradora','Colecistectomia videolaparoscópica','Apendicectomia',
-  'Herniorrafia inguinal','Herniorrafia ventral','Cesariana','Histerectomia total',
-  'Histerectomia videolaparoscópica','Miomectomia','Prostatectomia radical',
-  'Nefrectomia','Nefrectomia parcial','Tireoidectomia total','Tireoidectomia parcial',
-  'Mastectomia','Linfadenectomia axilar','Craniotomia','Craniectomia descompressiva',
-  'Artrodese lombar','Discectomia lombar','Artroscopia de joelho','Artroscopia de ombro',
-  'Artroplastia de quadril','Artroplastia de joelho','Osteossíntese de fêmur',
-  'Osteossíntese de tíbia','Amputação de membro inferior','Amigdalectomia + Adenoidectomia',
-  'Septoplastia','Rinoplastia','FESS (Cirurgia endoscópica nasal)','Timpanoplastia',
-  'Coluna cervical anterior','Endoscopia digestiva alta','Colonoscopia',
-  'Broncoscopia','CPRE','Cateterismo cardíaco','Implante de marcapasso'
-];
+const STORAGE_KEY = 'anestesia_v3';
 const MED_UNITS = ['mg','mcg','ml','mg/kg','mcg/kg','UI','mmol'];
+const TECHNIQUES = ['Geral inalatória','Geral venosa (TIVA)','Geral balanceada','Raquianestesia','Peridural','CSE (Raqui+Peridural)','BNP isolado','Sedação + BNP','Sedação consciente','Local + sedação'];
 
-let state = {
-  staff: [],
-  customProcedures: [],
-  cases: [],
-  apiKey: '',
-  currentTab: 'session',
-  session: { staffId: '', sex: 'M', age: '', weight: '', procedure: '', newProc: '' },
-  caseForm: { technique: '', meds: [], notes: '' },
-  newMed: { name: '', dosePerKg: '', totalDose: '', unit: 'mg' },
-  newStaff: '',
-  suggestions: null,
-  aiText: '',
-  aiLoading: false,
-  historyFilter: '',
-  showNewProc: false,
-  showNewMedForm: false,
+const PHASES = [
+  { key:'induction',  label:'Indução',     color:'badge-green'  },
+  { key:'maintenance',label:'Manutenção',  color:'badge-blue'   },
+  { key:'symptomatics',label:'Sintomáticos',color:'badge-amber' },
+  { key:'finalization',label:'Finalização',color:'badge-coral'  },
+];
+
+const DEFAULT_DRUGS = {
+  induction:    ['Midazolam','Fentanil','Sufentanil','Propofol','Ketamina','Etomidato','Cisatracúrio','Rocurônio','Succinilcolina','Atropina','Lidocaína','Dexametasona'],
+  maintenance:  ['Sevoflurano','Isoflurano','Desflurano','Propofol','Remifentanil','Fentanil','Sufentanil','Precedex (Dexmedetomidina)','Midazolam','Cisatracúrio','Rocurônio','Ketamina'],
+  symptomatics: ['Dipirona','Ondansetrona','Cetoprofeno','Cetorolaco','Dexametasona','Metoclopramida','Droperidol','Efedrina','Noradrenalina','Atropina','Metaraminol'],
+  finalization: ['Neostigmina','Atropina','Sugammadex','Paracetamol','Morfina','Tramadol','Dipirona','Tenoxicam','Ondansetrona','Naloxona'],
 };
 
-function persist() {
-  const toSave = {
-    staff: state.staff,
-    customProcedures: state.customProcedures,
-    cases: state.cases,
-    apiKey: state.apiKey
-  };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+const DEFAULT_PROCEDURES = ['Laparotomia exploradora','Colecistectomia videolaparoscópica','Apendicectomia','Herniorrafia inguinal','Herniorrafia ventral','Cesariana','Histerectomia total','Histerectomia videolaparoscópica','Miomectomia','Prostatectomia radical','Nefrectomia','Nefrectomia parcial','Tireoidectomia total','Tireoidectomia parcial','Mastectomia','Linfadenectomia axilar','Craniotomia','Craniectomia descompressiva','Artrodese lombar','Discectomia lombar','Artroscopia de joelho','Artroscopia de ombro','Artroplastia de quadril','Artroplastia de joelho','Osteossíntese de fêmur','Amigdalectomia + Adenoidectomia','Septoplastia','Rinoplastia','FESS','Timpanoplastia','Coluna cervical anterior','Endoscopia digestiva alta','Colonoscopia','Broncoscopia','CPRE','Cateterismo cardíaco','Implante de marcapasso'];
+
+const THEMES = [
+  { name:'Verde',   hue:158 },
+  { name:'Azul',    hue:210 },
+  { name:'Violeta', hue:265 },
+  { name:'Âmbar',   hue:35  },
+  { name:'Coral',   hue:12  },
+  { name:'Ciano',   hue:185 },
+  { name:'Rosa',    hue:330 },
+  { name:'Branco',  hue:0   },
+];
+
+let S = {
+  // persisted
+  staff:[], customProcedures:[], cases:[], apiKey:'', themeHue:158,
+  learnedDrugs:{ induction:[], maintenance:[], symptomatics:[], finalization:[] },
+  // session state
+  tab:'session', phase:'induction',
+  session:{ staffId:'', sex:'M', age:'', weight:'', weightConfirmed:'', procedure:'', newProc:'' },
+  caseForm:{ technique:'', phases:{ induction:[], maintenance:[], symptomatics:[], finalization:[] }, notes:'' },
+  newMed:{ name:'', dosePerKg:'', totalDose:'', unit:'mg' },
+  newStaff:'', aiText:'', aiLoading:false,
+  histFilter:'', showNewProc:false, showMedForm:false, newMedName:'',
+};
+
+// ── PERSIST ────────────────────────────────────────────────────────────────
+function persist(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    staff:S.staff, customProcedures:S.customProcedures, cases:S.cases,
+    apiKey:S.apiKey, themeHue:S.themeHue, learnedDrugs:S.learnedDrugs
+  }));
+}
+function loadData(){
+  try{
+    const d = JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
+    if(!d) return;
+    S.staff = d.staff||[];
+    S.customProcedures = d.customProcedures||[];
+    S.cases = d.cases||[];
+    S.apiKey = d.apiKey||'';
+    S.themeHue = d.themeHue ?? 158;
+    S.learnedDrugs = d.learnedDrugs || { induction:[], maintenance:[], symptomatics:[], finalization:[] };
+  } catch(e){}
 }
 
-function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    const d = JSON.parse(raw);
-    state.staff = d.staff || [];
-    state.customProcedures = d.customProcedures || [];
-    state.cases = d.cases || [];
-    state.apiKey = d.apiKey || '';
-  } catch(e) {}
+// ── THEME ──────────────────────────────────────────────────────────────────
+function applyTheme(hue){
+  const r = document.documentElement;
+  r.style.setProperty('--hue', hue);
+  // For hue=0 (white/neutral), use gray palette
+  if(hue === 0){
+    r.style.setProperty('--accent','hsl(0,0%,65%)');
+    r.style.setProperty('--accent2','hsl(0,0%,45%)');
+    r.style.setProperty('--accent-glow','hsl(0,0%,55%)');
+    r.style.setProperty('--accent-dim','hsla(0,0%,65%,0.13)');
+    r.style.setProperty('--accent-dim2','hsla(0,0%,65%,0.07)');
+    r.style.setProperty('--accent-border','hsla(0,0%,65%,0.35)');
+    r.style.setProperty('--accent-text','hsl(0,0%,80%)');
+  } else {
+    r.style.setProperty('--accent',`hsl(${hue},69%,37%)`);
+    r.style.setProperty('--accent2',`hsl(${hue},72%,25%)`);
+    r.style.setProperty('--accent-glow',`hsl(${hue},69%,37%)`);
+    r.style.setProperty('--accent-dim',`hsla(${hue},69%,37%,0.13)`);
+    r.style.setProperty('--accent-dim2',`hsla(${hue},69%,37%,0.07)`);
+    r.style.setProperty('--accent-border',`hsla(${hue},69%,37%,0.35)`);
+    r.style.setProperty('--accent-text',`hsl(${hue},60%,68%)`);
+  }
+  r.style.setProperty('--bg',  `hsl(${hue},25%,5%)`);
+  r.style.setProperty('--bg2', `hsl(${hue},20%,8%)`);
+  r.style.setProperty('--bg3', `hsl(${hue},18%,11%)`);
+  r.style.setProperty('--bg4', `hsl(${hue},16%,14%)`);
+  r.style.setProperty('--border',  `hsla(${hue},15%,100%,0.08)`);
+  r.style.setProperty('--border2', `hsla(${hue},15%,100%,0.14)`);
+  r.style.setProperty('--text',  `hsl(${hue},20%,92%)`);
+  r.style.setProperty('--text2', `hsl(${hue},10%,58%)`);
+  r.style.setProperty('--text3', `hsl(${hue},10%,38%)`);
 }
 
-function showToast(msg, duration=2000) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), duration);
+// ── HELPERS ────────────────────────────────────────────────────────────────
+function initials(n){ return n ? n.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2) : '?'; }
+function allProcs(){ return [...new Set([...DEFAULT_PROCEDURES,...S.customProcedures])].sort((a,b)=>a.localeCompare(b,'pt-BR')); }
+function toast(msg,d=2000){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),d); }
+
+function drugListForPhase(phase){
+  const defaults = DEFAULT_DRUGS[phase]||[];
+  const learned  = S.learnedDrugs[phase]||[];
+  return [...new Set([...defaults,...learned])];
 }
 
-function initials(name) {
-  if (!name) return '?';
-  return name.trim().split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+function recordDrug(phase, name){
+  const list = S.learnedDrugs[phase] || [];
+  if(!list.includes(name)) list.push(name);
+  S.learnedDrugs[phase] = list;
 }
 
-function allProcedures() {
-  return [...new Set([...DEFAULT_PROCEDURES, ...state.customProcedures])].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-}
+// ── STATISTICS ENGINE ──────────────────────────────────────────────────────
+function computeSuggestions(){
+  const {staffId, procedure, weight} = S.session;
+  const w = parseFloat(weight || S.session.weightConfirmed);
+  if(!staffId || !procedure || !w) return null;
+  const relevant = S.cases.filter(c => c.staffId === staffId);
+  const byProc   = relevant.filter(c => c.procedure === procedure);
+  const source   = byProc.length >= 2 ? byProc : relevant;
+  if(source.length < 3) return null;
 
-function computeSuggestions() {
-  const { staffId, procedure, weight } = state.session;
-  if (!staffId || !procedure || !weight) return null;
-  const w = parseFloat(weight);
-  const relevant = state.cases.filter(c => c.staffId === staffId);
-  const byProc = relevant.filter(c => c.procedure === procedure);
-  const source = byProc.length >= 2 ? byProc : relevant;
-  if (source.length < 3) return null;
+  // technique
+  const tc = {};
+  source.forEach(c => { if(c.technique) tc[c.technique] = (tc[c.technique]||0)+1; });
+  const topTech = Object.entries(tc).sort((a,b)=>b[1]-a[1])[0]?.[0];
 
-  const techCounts = {};
-  source.forEach(c => { if (c.technique) techCounts[c.technique] = (techCounts[c.technique] || 0) + 1; });
-  const topTech = Object.entries(techCounts).sort((a, b) => b[1] - a[1])[0]?.[0];
-
-  const medMap = {};
-  source.forEach(c => {
-    (c.meds || []).forEach(m => {
-      if (!medMap[m.name]) medMap[m.name] = { dpk: [], total: [], unit: m.unit };
-      if (m.dosePerKg) medMap[m.name].dpk.push(parseFloat(m.dosePerKg));
-      if (m.totalDose) medMap[m.name].total.push(parseFloat(m.totalDose));
+  // meds per phase
+  const phaseData = {};
+  PHASES.forEach(p => {
+    const medMap = {};
+    source.forEach(c => {
+      ((c.phases && c.phases[p.key]) || []).forEach(m => {
+        if(!medMap[m.name]) medMap[m.name] = { dpk:[], total:[], unit:m.unit };
+        if(m.dosePerKg) medMap[m.name].dpk.push(parseFloat(m.dosePerKg));
+        if(m.totalDose) medMap[m.name].total.push(parseFloat(m.totalDose));
+      });
     });
+    phaseData[p.key] = Object.entries(medMap).map(([name,d])=>{
+      const avgDpk   = d.dpk.length   ? d.dpk.reduce((a,b)=>a+b)/d.dpk.length     : null;
+      const avgTotal = d.total.length  ? d.total.reduce((a,b)=>a+b)/d.total.length : null;
+      const proj     = avgDpk ? (avgDpk*w) : avgTotal;
+      return { name, avgDpk:avgDpk?.toFixed(2), avgTotal:avgTotal?.toFixed(1), projected:proj?.toFixed(1), unit:d.unit, freq:d.dpk.length+d.total.length };
+    }).sort((a,b)=>b.freq-a.freq).filter(m=>m.freq>0);
   });
 
-  const meds = Object.entries(medMap).map(([name, d]) => {
-    const avgDpk = d.dpk.length ? d.dpk.reduce((a, b) => a + b) / d.dpk.length : null;
-    const avgTotal = d.total.length ? d.total.reduce((a, b) => a + b) / d.total.length : null;
-    const projected = avgDpk ? (avgDpk * w) : avgTotal;
-    return { name, avgDpk: avgDpk?.toFixed(2), avgTotal: avgTotal?.toFixed(1), projected: projected?.toFixed(1), unit: d.unit, freq: d.dpk.length + d.total.length };
-  }).sort((a, b) => b.freq - a.freq);
-
-  return { technique: topTech, meds, basedOn: source.length, procSpecific: byProc.length >= 2 };
+  return { technique:topTech, phases:phaseData, basedOn:source.length, procSpecific:byProc.length>=2 };
 }
 
-async function callAI() {
-  if (!state.apiKey) { showToast('Configure a chave de API primeiro'); return; }
-  const { staffId, procedure, sex, age, weight } = state.session;
-  if (!staffId || !procedure) return;
-  const staffName = state.staff.find(s => s.id === staffId)?.name || 'Staff';
-  const recent = state.cases.filter(c => c.staffId === staffId).slice(-15);
-  if (recent.length < 3) { showToast('Mínimo 3 casos para análise IA'); return; }
-  state.aiLoading = true; state.aiText = ''; render();
+// ── AI ─────────────────────────────────────────────────────────────────────
+async function callAI(){
+  if(!S.apiKey){ toast('Configure a chave de API em Config'); return; }
+  const {staffId,procedure,sex,age,weight,weightConfirmed} = S.session;
+  if(!staffId||!procedure) return;
+  const staffName = S.staff.find(s=>s.id===staffId)?.name||'Staff';
+  const recent = S.cases.filter(c=>c.staffId===staffId).slice(-15);
+  if(recent.length<3){ toast('Mínimo 3 casos para análise IA'); return; }
+  S.aiLoading=true; S.aiText=''; render();
+  const w = weight||weightConfirmed;
+  const prompt = `Você é um assistente de anestesiologia. Analise o perfil do staff "${staffName}" e forneça sugestões clínicas objetivas.
 
-  const prompt = `Você é um assistente de anestesiologia clínica. Analise o perfil do staff "${staffName}" com base no histórico e forneça sugestões objetivas e concisas para o próximo caso.
+PRÓXIMO CASO: ${procedure} | ${sex==='M'?'Masc.':'Fem.'} | ${age} anos | ${w}kg
 
-PRÓXIMO CASO:
-- Procedimento: ${procedure}
-- Paciente: ${sex === 'M' ? 'Masculino' : 'Feminino'}, ${age} anos, ${weight}kg
+HISTÓRICO (${recent.length} casos):
+${JSON.stringify(recent.map(c=>({proc:c.procedure,tech:c.technique,meds:PHASES.map(p=>({fase:p.label,drugs:((c.phases&&c.phases[p.key])||[]).map(m=>`${m.name} ${m.dosePerKg?m.dosePerKg+m.unit+'/kg':''}${m.totalDose?' ('+m.totalDose+m.unit+')':''}`.trim())})).filter(p=>p.drugs.length)})),null,1)}
 
-HISTÓRICO DO STAFF (${recent.length} casos):
-${JSON.stringify(recent.map(c => ({
-  proc: c.procedure,
-  tech: c.technique,
-  meds: (c.meds || []).map(m => `${m.name} ${m.dosePerKg ? m.dosePerKg + m.unit + '/kg' : ''} ${m.totalDose ? '(' + m.totalDose + m.unit + ')' : ''}`.trim())
-})), null, 1)}
-
-Responda em português, de forma direta e clínica. Inclua: 1) Técnica provável 2) Medicações com doses estimadas para este paciente específico 3) Alguma observação relevante do padrão do staff. Máximo 5 linhas.`;
-
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': state.apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-opus-4-5', max_tokens: 500, messages: [{ role: 'user', content: prompt }] })
+Responda em português, de forma direta. Cubra: técnica provável, indução, manutenção, sintomáticos e finalização com doses estimadas para este paciente. Máximo 6 linhas.`;
+  try{
+    const resp = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:'claude-opus-4-5',max_tokens:600,messages:[{role:'user',content:prompt}]})
     });
     const data = await resp.json();
-    if (data.error) state.aiText = 'Erro: ' + data.error.message;
-    else state.aiText = data.content?.[0]?.text || 'Sem resposta.';
-  } catch (e) {
-    state.aiText = 'Erro de conexão. Verifique a internet e a chave de API.';
-  }
-  state.aiLoading = false;
+    S.aiText = data.error ? 'Erro: '+data.error.message : (data.content?.[0]?.text||'Sem resposta.');
+  } catch(e){ S.aiText='Erro de conexão.'; }
+  S.aiLoading=false; render();
+}
+
+// ── ACTIONS ────────────────────────────────────────────────────────────────
+function selectPhase(p){ S.phase=p; S.showMedForm=false; S.newMedName=''; render(); }
+
+function pickDrugChip(name){
+  S.newMedName = name;
+  S.showMedForm = true;
+  S.newMed = { name, dosePerKg:'', totalDose:'', unit:'mg' };
+  render();
+  setTimeout(()=>document.getElementById('medDpkInput')?.focus(),60);
+}
+
+function addMed(){
+  const {name,dosePerKg,totalDose,unit} = S.newMed;
+  if(!name.trim()){ toast('Informe o nome da medicação'); return; }
+  S.caseForm.phases[S.phase].push({ id:Date.now().toString(), name:name.trim(), dosePerKg, totalDose, unit });
+  recordDrug(S.phase, name.trim());
+  S.newMed = { name:'', dosePerKg:'', totalDose:'', unit:'mg' };
+  S.showMedForm = false; S.newMedName = '';
+  persist(); render();
+}
+
+function removeMed(phase, id){
+  S.caseForm.phases[phase] = S.caseForm.phases[phase].filter(m=>m.id!==id);
   render();
 }
 
-function saveCase() {
-  const { staffId, sex, age, weight, procedure } = state.session;
-  if (!staffId || !procedure) { showToast('Selecione staff e procedimento'); return; }
-  const c = {
-    id: Date.now().toString(),
-    date: new Date().toISOString().split('T')[0],
-    staffId, sex, age, weight, procedure,
-    technique: state.caseForm.technique,
-    meds: [...state.caseForm.meds],
-    notes: state.caseForm.notes
-  };
-  state.cases.push(c);
+function saveCase(){
+  const {staffId,sex,age,procedure} = S.session;
+  const w = S.session.weightConfirmed || S.session.weight;
+  if(!staffId||!procedure){ toast('Selecione staff e procedimento'); return; }
+  S.cases.push({ id:Date.now().toString(), date:new Date().toISOString().split('T')[0], staffId, sex, age, weight:w, procedure, technique:S.caseForm.technique, phases:JSON.parse(JSON.stringify(S.caseForm.phases)), notes:S.caseForm.notes });
   persist();
-  state.caseForm = { technique: '', meds: [], notes: '' };
-  state.session = { ...state.session, sex: 'M', age: '', weight: '', procedure: '', newProc: '' };
-  state.suggestions = null; state.aiText = '';
-  showToast('✓ Caso salvo com sucesso');
+  S.caseForm = { technique:'', phases:{induction:[],maintenance:[],symptomatics:[],finalization:[]}, notes:'' };
+  S.session = {...S.session, sex:'M', age:'', weight:'', weightConfirmed:'', procedure:'', newProc:'' };
+  S.aiText=''; S.showMedForm=false;
+  toast('✓ Caso salvo');
   render();
 }
 
-function deleteCase(id) {
-  if (!confirm('Remover este caso do histórico?')) return;
-  state.cases = state.cases.filter(c => c.id !== id);
-  persist(); showToast('Caso removido'); render();
-}
-
-function setTab(tab) {
-  state.currentTab = tab;
-  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
+function confirmWeight(){
+  S.session.weightConfirmed = S.session.weight;
+  document.activeElement?.blur();
   render();
 }
 
-function exportData() {
-  const blob = new Blob([JSON.stringify({ staff: state.staff, customProcedures: state.customProcedures, cases: state.cases, apiKey: state.apiKey }, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = `anestesia_backup_${new Date().toISOString().split('T')[0]}.json`;
-  a.click(); URL.revokeObjectURL(url);
-  showToast('Backup exportado');
+function addCustomProc(){
+  const p = S.session.newProc.trim(); if(!p) return;
+  if(!S.customProcedures.includes(p)) S.customProcedures.push(p);
+  S.session.procedure = p; S.session.newProc=''; S.showNewProc=false;
+  persist(); render();
 }
 
-function importData(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    try {
-      const d = JSON.parse(ev.target.result);
-      if (d.staff) state.staff = d.staff;
-      if (d.customProcedures) state.customProcedures = d.customProcedures;
-      if (d.cases) state.cases = d.cases;
-      if (d.apiKey) state.apiKey = d.apiKey;
-      persist(); showToast('✓ Dados importados'); render();
-    } catch { alert('Arquivo inválido ou corrompido.'); }
+function addStaff(){
+  const name = S.newStaff.trim(); if(!name) return;
+  S.staff.push({ id:Date.now().toString(), name });
+  S.newStaff=''; persist(); render(); toast('Staff adicionado');
+}
+
+function removeStaff(id){
+  const count = S.cases.filter(c=>c.staffId===id).length;
+  if(!confirm(`Remover staff?${count?'\n\n'+count+' caso(s) associado(s) serão mantidos.':''}`)) return;
+  S.staff = S.staff.filter(s=>s.id!==id); persist(); render();
+}
+
+function deleteCase(id){
+  if(!confirm('Remover este caso?')) return;
+  S.cases = S.cases.filter(c=>c.id!==id); persist(); toast('Caso removido'); render();
+}
+
+function exportData(){
+  const blob = new Blob([JSON.stringify({staff:S.staff,customProcedures:S.customProcedures,cases:S.cases,apiKey:S.apiKey,themeHue:S.themeHue,learnedDrugs:S.learnedDrugs},null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`anestesia_backup_${new Date().toISOString().split('T')[0]}.json`; a.click();
+  toast('Backup exportado');
+}
+
+function importData(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      if(d.staff) S.staff=d.staff;
+      if(d.customProcedures) S.customProcedures=d.customProcedures;
+      if(d.cases) S.cases=d.cases;
+      if(d.apiKey) S.apiKey=d.apiKey;
+      if(d.themeHue!=null){ S.themeHue=d.themeHue; applyTheme(S.themeHue); }
+      if(d.learnedDrugs) S.learnedDrugs=d.learnedDrugs;
+      persist(); toast('✓ Dados importados'); render();
+    } catch{ alert('Arquivo inválido.'); }
   };
-  reader.readAsText(file);
-  e.target.value = '';
+  reader.readAsText(file); e.target.value='';
 }
 
-// ─── RENDER ──────────────────────────────────────────────────────────────────
+function setTheme(hue){
+  S.themeHue=hue; applyTheme(hue); persist(); render();
+}
 
-function renderSession() {
-  const { staffId, sex, age, weight, procedure, newProc } = state.session;
-  const { technique, meds, notes } = state.caseForm;
-  const { newMed } = state;
+function setTab(t){
+  S.tab=t;
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  render();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function render(){
+  const c = document.getElementById('content');
+  if(!c) return;
+  switch(S.tab){
+    case 'session': c.innerHTML = renderSession(); break;
+    case 'history': c.innerHTML = renderHistory(); break;
+    case 'config':  c.innerHTML = renderConfig();  break;
+  }
+  document.getElementById('headerSub').textContent = `${S.cases.length} casos · ${S.staff.length} staff`;
+}
+
+function renderSession(){
+  const {staffId,sex,age,weight,weightConfirmed,procedure,newProc} = S.session;
   const sugg = computeSuggestions();
+  const wDisplay = weightConfirmed || weight;
 
-  const staffOptions = state.staff.map(s => `<option value="${s.id}"${staffId === s.id ? ' selected' : ''}>${s.name}</option>`).join('');
-  const procOptions = allProcedures().map(p => `<option value="${p}"${procedure === p ? ' selected' : ''}>${p}</option>`).join('');
-  const techChips = TECHNIQUES.map(t => `<div class="chip${technique === t ? ' selected' : ''}" onclick="selectTechnique('${t.replace(/'/g,"\\'")}')">` + t + '</div>').join('');
+  const staffOpts = S.staff.map(s=>`<option value="${s.id}"${staffId===s.id?' selected':''}>${s.name}</option>`).join('');
+  const procOpts  = allProcs().map(p=>`<option value="${p}"${procedure===p?' selected':''}>${p}</option>`).join('');
 
-  const hasSugg = sugg && sugg.basedOn >= 3;
-  const suggHTML = hasSugg ? `
-    <div class="suggestion-box">
-      <div class="suggestion-header">
-        <span class="ai-label">⬡ Sugestão · ${sugg.basedOn} casos ${sugg.procSpecific ? '(específico)' : '(staff geral)'}</span>
-        <button class="btn btn-sm badge-blue" onclick="callAI()" style="padding:3px 10px;font-size:10px;" ${state.aiLoading ? 'disabled' : ''}>
-          ${state.aiLoading ? '<div class="spinner" style="width:10px;height:10px;display:inline-block"></div>' : 'IA ↗'}
-        </button>
-      </div>
-      ${sugg.technique ? `<div class="suggestion-row"><span>Técnica provável</span><span class="badge badge-green">${sugg.technique}</span></div>` : ''}
-      ${sugg.meds.slice(0, 5).map(m => `
-        <div class="suggestion-row">
-          <span>${m.name}</span>
-          <span class="suggestion-dose">~${m.projected} ${m.unit}${m.avgDpk ? ` <span style="opacity:0.6;font-size:10px">(${m.avgDpk}${m.unit}/kg)</span>` : ''}</span>
-        </div>`).join('')}
-    </div>` : '';
+  // Phase tabs
+  const phaseTabs = PHASES.map(p=>{
+    const count = S.caseForm.phases[p.key].length;
+    const isActive = S.phase===p.key;
+    const hasMeds = count>0;
+    return `<button class="phase-tab${isActive?' active':''}${hasMeds?' has-meds':''}" onclick="selectPhase('${p.key}')">${p.label}${count?`<span class="phase-badge">${count}</span>`:''}
+    </button>`;
+  }).join('');
 
-  const aiHTML = state.aiText ? `
-    <div class="ai-box">
-      <div class="ai-box-label">Análise IA</div>
-      ${state.aiText.replace(/\n/g, '<br>')}
-    </div>` : '';
+  // Drug suggestions for current phase
+  const allDrugs = drugListForPhase(S.phase);
+  const usedNames = S.caseForm.phases[S.phase].map(m=>m.name);
+  const availDrugs = allDrugs.filter(d=>!usedNames.includes(d));
+  const drugChips = availDrugs.slice(0,12).map(d=>`<div class="drug-chip" onclick="pickDrugChip('${d.replace(/'/g,"\\'")}')">+ ${d}</div>`).join('');
 
-  const medsHTML = meds.map(m => `
+  // Meds in current phase
+  const phase = S.phase;
+  const phaseMeds = S.caseForm.phases[phase];
+  const medsHTML = phaseMeds.map(m=>`
     <div class="med-item">
       <span class="med-name">${m.name}</span>
-      ${m.dosePerKg ? `<span class="badge badge-green">${m.dosePerKg} ${m.unit}/kg</span>` : ''}
-      ${m.totalDose ? `<span class="badge badge-blue">${m.totalDose} ${m.unit}</span>` : ''}
-      <button class="btn-icon" onclick="removeMed('${m.id}')">×</button>
+      ${m.dosePerKg?`<span class="badge badge-green">${m.dosePerKg} ${m.unit}/kg</span>`:''}
+      ${m.totalDose?`<span class="badge badge-blue">${m.totalDose} ${m.unit}</span>`:''}
+      <button class="btn-icon" onclick="removeMed('${phase}','${m.id}')">×</button>
     </div>`).join('');
 
-  const unitOpts = MED_UNITS.map(u => `<option value="${u}"${newMed.unit === u ? ' selected' : ''}>${u}</option>`).join('');
-  const newMedHTML = state.showNewMedForm ? `
+  const unitOpts = MED_UNITS.map(u=>`<option value="${u}"${S.newMed.unit===u?' selected':''}>${u}</option>`).join('');
+
+  const medFormHTML = S.showMedForm ? `
     <div class="med-input-area">
-      <div class="grid2" style="margin-bottom:6px">
-        <div class="field" style="margin-bottom:0">
-          <label>Medicação</label>
-          <input type="text" placeholder="ex: Propofol" value="${newMed.name}" oninput="state.newMed.name=this.value">
-        </div>
-        <div class="field" style="margin-bottom:0">
-          <label>Unidade</label>
-          <select onchange="state.newMed.unit=this.value">${unitOpts}</select>
-        </div>
+      <div class="field" style="margin-bottom:8px">
+        <label>Medicação</label>
+        <input type="text" value="${S.newMed.name}" oninput="S.newMed.name=this.value" placeholder="Nome">
       </div>
       <div class="grid2" style="margin-bottom:8px">
         <div class="field" style="margin-bottom:0">
           <label>Dose/kg</label>
-          <input type="number" inputmode="decimal" placeholder="ex: 2" value="${newMed.dosePerKg}" oninput="state.newMed.dosePerKg=this.value">
+          <input id="medDpkInput" type="number" inputmode="decimal" placeholder="ex: 2" value="${S.newMed.dosePerKg}" oninput="S.newMed.dosePerKg=this.value">
         </div>
         <div class="field" style="margin-bottom:0">
           <label>Dose total</label>
-          <input type="number" inputmode="decimal" placeholder="ex: 140" value="${newMed.totalDose}" oninput="state.newMed.totalDose=this.value">
+          <input type="number" inputmode="decimal" placeholder="ex: 140" value="${S.newMed.totalDose}" oninput="S.newMed.totalDose=this.value">
         </div>
       </div>
-      <div style="display:flex;gap:6px">
-        <button class="btn btn-primary btn-sm" style="flex:1" onclick="addMed()">+ Confirmar medicação</button>
-        <button class="btn btn-sm" onclick="state.showNewMedForm=false;render()">Cancelar</button>
+      <div class="field" style="margin-bottom:8px">
+        <label>Unidade</label>
+        <select onchange="S.newMed.unit=this.value">${unitOpts}</select>
       </div>
-    </div>` : `<button class="btn btn-sm" style="width:100%;margin-bottom:6px" onclick="state.showNewMedForm=true;render()">+ Adicionar medicação</button>`;
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-primary btn-sm" style="flex:1" onclick="addMed()">✓ Confirmar</button>
+        <button class="btn btn-sm" onclick="S.showMedForm=false;render()">Cancelar</button>
+      </div>
+    </div>` : `<button class="btn btn-sm" style="width:100%;margin-bottom:8px" onclick="S.showMedForm=true;S.newMed={name:'',dosePerKg:'',totalDose:'',unit:'mg'};render()">+ Adicionar manualmente</button>`;
 
-  const noStaff = state.staff.length === 0;
-  const warnHTML = noStaff ? `<div class="warning-bar">Cadastre um staff na aba Config para começar.</div>` : '';
+  // Suggestions block
+  let suggHTML = '';
+  if(sugg){
+    const phaseSuggRows = PHASES.map(p=>{
+      const meds = (sugg.phases[p.key]||[]).slice(0,3);
+      if(!meds.length) return '';
+      return meds.map(m=>`
+        <div class="sugg-row">
+          <span><span class="sugg-phase-label ${p.color}" style="opacity:0.8">${p.label.slice(0,3)}</span>${m.name}</span>
+          <span class="sugg-dose">~${m.projected} ${m.unit}${m.avgDpk?` <span style="opacity:0.55;font-size:10px">(${m.avgDpk}/kg)</span>`:''}</span>
+        </div>`).join('');
+    }).join('');
+
+    suggHTML = `
+      <div class="suggestion-box">
+        <div class="suggestion-header">
+          <span class="ai-label">⬡ ${sugg.basedOn} casos ${sugg.procSpecific?'(específico)':'(staff geral)'}</span>
+          <button class="btn btn-sm badge-blue" onclick="callAI()" style="padding:3px 10px;font-size:10px" ${S.aiLoading?'disabled':''}>
+            ${S.aiLoading?'<div class="spinner"></div>':'IA ↗'}
+          </button>
+        </div>
+        ${sugg.technique?`<div class="sugg-row"><span>Técnica provável</span><span class="badge badge-green">${sugg.technique}</span></div>`:''}
+        ${phaseSuggRows}
+      </div>`;
+  }
+
+  const aiHTML = S.aiText ? `
+    <div class="ai-box">
+      <div class="ai-box-label">Análise IA</div>
+      ${S.aiText.replace(/\n/g,'<br>')}
+    </div>` : '';
+
+  const techChips = TECHNIQUES.map(t=>`<div class="chip${S.caseForm.technique===t?' selected':''}" onclick="S.caseForm.technique=S.caseForm.technique==='${t.replace(/'/g,"\\'")}' ? '' : '${t.replace(/'/g,"\\'")}';render()">${t}</div>`).join('');
+
+  const noStaff = S.staff.length===0;
 
   return `
-    ${warnHTML}
+    ${noStaff?'<div class="warning-bar">Cadastre um staff na aba Config para começar.</div>':''}
     <div class="card">
       <div class="section-label">Staff e paciente</div>
       <div class="field">
-        <label>Staff (anestesista / cirurgião)</label>
-        <select onchange="state.session.staffId=this.value;state.aiText='';render()">
-          <option value="">Selecionar staff...</option>
-          ${staffOptions}
+        <label>Staff</label>
+        <select onchange="S.session.staffId=this.value;S.aiText='';render()">
+          <option value="">Selecionar staff...</option>${staffOpts}
         </select>
       </div>
       <div class="grid3">
         <div class="field">
           <label>Sexo</label>
-          <select onchange="state.session.sex=this.value">
+          <select onchange="S.session.sex=this.value">
             <option value="M"${sex==='M'?' selected':''}>Masc.</option>
             <option value="F"${sex==='F'?' selected':''}>Fem.</option>
           </select>
         </div>
         <div class="field">
           <label>Idade</label>
-          <input type="number" inputmode="numeric" placeholder="anos" value="${age}" oninput="state.session.age=this.value">
+          <input type="number" inputmode="numeric" placeholder="anos" value="${age}" oninput="S.session.age=this.value">
         </div>
         <div class="field">
-          <label>Peso (kg)</label>
-          <input type="number" inputmode="decimal" placeholder="kg" value="${weight}" oninput="state.session.weight=this.value;render()">
+          <label>Peso (kg)${weightConfirmed?` <span class="badge-green badge" style="padding:1px 5px;font-size:9px">✓ ${weightConfirmed}kg</span>`:''}</label>
+          <div class="weight-row">
+            <input type="number" inputmode="decimal" placeholder="kg" value="${weight}" oninput="S.session.weight=this.value" onkeydown="if(event.key==='Enter'){confirmWeight();event.preventDefault()}">
+            <button class="weight-confirm" onclick="confirmWeight()">Ok</button>
+          </div>
         </div>
       </div>
-      <div class="field" style="margin-bottom:${procedure==='__new__'?'6px':'0'}">
+      <div class="field"${procedure==='__new__'?` style="margin-bottom:6px"`:''}>
         <label>Procedimento</label>
         <select onchange="handleProcChange(this.value)">
-          <option value="">Selecionar procedimento...</option>
-          ${procOptions}
-          <option value="__new__">+ Adicionar novo procedimento...</option>
+          <option value="">Selecionar...</option>${procOpts}
+          <option value="__new__">+ Novo procedimento...</option>
         </select>
       </div>
-      ${procedure === '__new__' || state.showNewProc ? `
+      ${procedure==='__new__'||S.showNewProc?`
         <div style="display:flex;gap:6px;margin-bottom:2px">
-          <input type="text" style="flex:1;padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg3);color:var(--text);font-size:13px;font-family:var(--sans);outline:none" placeholder="Nome do procedimento" value="${newProc}" oninput="state.session.newProc=this.value" id="newProcInput">
+          <input id="newProcInput" type="text" style="flex:1;padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--rs);background:var(--bg3);color:var(--text);font-size:13px;font-family:var(--sans);outline:none" placeholder="Nome do procedimento" value="${newProc}" oninput="S.session.newProc=this.value" onkeydown="if(event.key==='Enter')addCustomProc()">
           <button class="btn btn-primary btn-sm" onclick="addCustomProc()">Adicionar</button>
-        </div>` : ''}
+        </div>`:''}
     </div>
 
-    ${suggHTML}
-    ${aiHTML}
+    ${suggHTML}${aiHTML}
 
     <div class="card">
-      <div class="section-label">Registro anestésico</div>
-      <div class="field">
-        <label>Técnica anestésica</label>
-        <div class="chips">${techChips}</div>
-      </div>
+      <div class="section-label">Técnica anestésica</div>
+      <div class="chips">${techChips}</div>
       <hr class="divider">
-      <div class="section-label">Medicações utilizadas</div>
-      <div class="scroll-area">${medsHTML}</div>
-      ${newMedHTML}
+      <div class="section-label">Medicações por fase</div>
+      <div class="phase-tabs">${phaseTabs}</div>
+      <div class="drug-suggestions">${drugChips}</div>
+      ${medsHTML}
+      ${medFormHTML}
       <hr class="divider">
       <div class="field">
         <label>Observações / intercorrências</label>
-        <textarea placeholder="Hipotensão, bradicardia, alergias, particularidades do caso..." oninput="state.caseForm.notes=this.value">${notes}</textarea>
+        <textarea placeholder="Hipotensão, bradicardia, alergias, particularidades..." oninput="S.caseForm.notes=this.value">${S.caseForm.notes}</textarea>
       </div>
-      <button class="btn btn-primary btn-full" onclick="saveCase()" style="margin-top:4px">Salvar caso</button>
+      <button class="btn btn-primary btn-full" onclick="saveCase()">Salvar caso</button>
     </div>`;
 }
 
-function renderHistory() {
-  const filter = state.historyFilter;
-  const staffOptions = state.staff.map(s => `<option value="${s.id}"${filter === s.id ? ' selected' : ''}>${s.name}</option>`).join('');
-  const filtered = filter ? state.cases.filter(c => c.staffId === filter) : state.cases;
-  const sorted = [...filtered].reverse();
+function renderHistory(){
+  const staffOpts = S.staff.map(s=>`<option value="${s.id}"${S.histFilter===s.id?' selected':''}>${s.name}</option>`).join('');
+  const filtered  = S.histFilter ? S.cases.filter(c=>c.staffId===S.histFilter) : S.cases;
+  const sorted    = [...filtered].reverse();
 
-  const casesHTML = sorted.length === 0
-    ? `<div class="empty"><div class="empty-icon">⬡</div>Nenhum caso${filter ? ' para este staff' : ''} registrado.</div>`
-    : sorted.map(c => {
-        const s = state.staff.find(x => x.id === c.staffId);
-        const medsHTML = (c.meds || []).map(m =>
-          `<span class="badge badge-blue" style="font-size:10px">${m.name}${m.totalDose ? ' ' + m.totalDose + m.unit : ''}</span>`
-        ).join('');
+  const casesHTML = sorted.length===0
+    ? `<div class="empty">Nenhum caso${S.histFilter?' para este staff':''} registrado.</div>`
+    : sorted.map(c=>{
+        const st = S.staff.find(x=>x.id===c.staffId);
+        const allMeds = PHASES.flatMap(p=>((c.phases&&c.phases[p.key])||[]).map(m=>({...m,phaseColor:p.color})));
+        const medsHTML = allMeds.map(m=>`<span class="badge ${m.phaseColor}" style="font-size:10px">${m.name}${m.totalDose?' '+m.totalDose+m.unit:''}</span>`).join('');
         return `
           <div class="case-card">
-            <div class="avatar">${initials(s?.name)}</div>
+            <div class="avatar">${initials(st?.name)}</div>
             <div class="case-info">
               <div class="case-top">
-                <span class="case-staff">${s?.name || 'Staff removido'}</span>
+                <span class="case-staff">${st?.name||'(removido)'}</span>
                 <div style="display:flex;align-items:center;gap:6px">
                   <span class="case-date">${c.date}</span>
                   <button class="btn-icon" style="font-size:13px" onclick="deleteCase('${c.id}')">×</button>
@@ -591,51 +681,58 @@ function renderHistory() {
               </div>
               <div class="case-proc">${c.procedure}</div>
               <div class="case-tags">
-                ${c.sex ? `<span class="tag">${c.sex === 'M' ? 'M' : 'F'}</span>` : ''}
-                ${c.age ? `<span class="tag">${c.age}a</span>` : ''}
-                ${c.weight ? `<span class="tag">${c.weight}kg</span>` : ''}
-                ${c.technique ? `<span class="badge badge-green">${c.technique}</span>` : ''}
+                ${c.sex?`<span class="tag">${c.sex==='M'?'M':'F'}</span>`:''}
+                ${c.age?`<span class="tag">${c.age}a</span>`:''}
+                ${c.weight?`<span class="tag">${c.weight}kg</span>`:''}
+                ${c.technique?`<span class="badge badge-green">${c.technique}</span>`:''}
               </div>
-              ${medsHTML ? `<div class="case-meds">${medsHTML}</div>` : ''}
-              ${c.notes ? `<div style="font-size:11px;color:var(--text3);margin-top:4px;font-style:italic">${c.notes}</div>` : ''}
+              ${medsHTML?`<div class="case-meds">${medsHTML}</div>`:''}
+              ${c.notes?`<div style="font-size:11px;color:var(--text3);margin-top:4px;font-style:italic">${c.notes}</div>`:''}
             </div>
           </div>`;
       }).join('');
 
   return `
     <div class="filter-row">
-      <select onchange="state.historyFilter=this.value;render()">
-        <option value="">Todos os staff (${state.cases.length} casos)</option>
-        ${staffOptions}
+      <select onchange="S.histFilter=this.value;render()">
+        <option value="">Todos os staff (${S.cases.length} casos)</option>${staffOpts}
       </select>
     </div>
     ${casesHTML}`;
 }
 
-function renderConfig() {
-  const staffHTML = state.staff.length === 0
-    ? `<div style="font-size:12px;color:var(--text3);padding:8px 0">Nenhum staff cadastrado ainda.</div>`
-    : state.staff.map(s => {
-        const count = state.cases.filter(c => c.staffId === s.id).length;
-        return `
-          <div class="staff-item">
-            <div class="avatar">${initials(s.name)}</div>
-            <span style="flex:1;font-size:13px">${s.name}</span>
-            <span class="tag" style="margin-right:6px">${count} caso${count !== 1 ? 's' : ''}</span>
-            <button class="btn btn-danger btn-sm" onclick="removeStaff('${s.id}')">Remover</button>
-          </div>`;
+function renderConfig(){
+  const staffHTML = S.staff.length===0
+    ? `<div style="font-size:12px;color:var(--text3);padding:8px 0">Nenhum staff cadastrado.</div>`
+    : S.staff.map(s=>{
+        const n = S.cases.filter(c=>c.staffId===s.id).length;
+        return `<div class="staff-item">
+          <div class="avatar">${initials(s.name)}</div>
+          <span style="flex:1;font-size:13px">${s.name}</span>
+          <span class="tag" style="margin-right:6px">${n} caso${n!==1?'s':''}</span>
+          <button class="btn btn-danger btn-sm" onclick="removeStaff('${s.id}')">Remover</button>
+        </div>`;
       }).join('');
 
-  const totalProcs = new Set(state.cases.map(c => c.procedure)).size;
-  const totalMeds = state.cases.reduce((acc, c) => acc + (c.meds || []).length, 0);
+  const totalProcs = new Set(S.cases.map(c=>c.procedure)).size;
+  const totalMeds  = S.cases.reduce((acc,c)=>acc+PHASES.reduce((a,p)=>a+((c.phases&&c.phases[p.key])||[]).length,0),0);
+
+  // Theme swatches
+  const swatches = THEMES.map(t=>`
+    <div class="swatch${S.themeHue===t.hue?' active':''}" title="${t.name}"
+      style="background:hsl(${t.hue===0?'0,0%,50%':t.hue+',65%,40%'})"
+      onclick="setTheme(${t.hue})"></div>`).join('');
+
+  // Learned drugs summary
+  const learnedCount = Object.values(S.learnedDrugs).reduce((a,b)=>a+b.length,0);
 
   return `
     <div class="card">
-      <div class="section-label">Staff cadastrados</div>
+      <div class="section-label">Staff</div>
       <div class="scroll-area">${staffHTML}</div>
       <hr class="divider">
       <div style="display:flex;gap:6px">
-        <input type="text" id="newStaffInput" style="flex:1;padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg3);color:var(--text);font-size:13px;font-family:var(--sans);outline:none" placeholder="Nome do staff" value="${state.newStaff}" oninput="state.newStaff=this.value" onkeydown="if(event.key==='Enter')addStaff()">
+        <input type="text" id="newStaffInput" style="flex:1;padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--rs);background:var(--bg3);color:var(--text);font-size:13px;font-family:var(--sans);outline:none" placeholder="Nome do staff" value="${S.newStaff}" oninput="S.newStaff=this.value" onkeydown="if(event.key==='Enter')addStaff()">
         <button class="btn btn-primary btn-sm" onclick="addStaff()">Adicionar</button>
       </div>
     </div>
@@ -643,172 +740,63 @@ function renderConfig() {
     <div class="card">
       <div class="section-label">Estatísticas</div>
       <div class="grid3">
-        <div class="stat-card"><div class="stat-num">${state.cases.length}</div><div class="stat-label">casos</div></div>
+        <div class="stat-card"><div class="stat-num">${S.cases.length}</div><div class="stat-label">casos</div></div>
         <div class="stat-card"><div class="stat-num">${totalProcs}</div><div class="stat-label">procs.</div></div>
-        <div class="stat-card"><div class="stat-num">${totalMeds}</div><div class="stat-label">drugs</div></div>
+        <div class="stat-card"><div class="stat-num">${totalMeds}</div><div class="stat-label">drogas</div></div>
       </div>
+      ${learnedCount>0?`<div style="font-size:11px;color:var(--text3);margin-top:8px">${learnedCount} medicação(ões) aprendida(s) pelo app</div>`:''}
+    </div>
+
+    <div class="card">
+      <div class="section-label">Tema de cores</div>
+      <div class="theme-grid">${swatches}</div>
     </div>
 
     <div class="card">
       <div class="section-label">Integração IA (opcional)</div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;line-height:1.5">
-        Para análises em linguagem natural, insira sua chave da API Anthropic.
-        A chave fica salva localmente, nunca é enviada a terceiros.
-      </div>
+      <div class="info-bar">Para análises contextuais em linguagem natural, insira sua chave da API Anthropic. Fica salva apenas localmente neste dispositivo.</div>
       <div class="field">
-        <label>Chave da API (sk-ant-...)</label>
-        <input type="password" placeholder="sk-ant-api03-..." value="${state.apiKey}" oninput="state.apiKey=this.value;persist()">
+        <label>Chave API (sk-ant-...)</label>
+        <input type="password" placeholder="sk-ant-api03-..." value="${S.apiKey}" oninput="S.apiKey=this.value;persist()">
       </div>
-      ${state.apiKey ? `<div class="api-key-status badge badge-green" style="margin-top:4px">✓ Chave configurada</div>` : `<div class="api-key-status" style="font-size:11px;color:var(--text3)">Sem chave — somente sugestões estatísticas disponíveis</div>`}
+      ${S.apiKey?`<span class="badge badge-green">✓ Chave configurada</span>`:`<div class="api-key-note">Sem chave — apenas sugestões estatísticas</div>`}
     </div>
 
     <div class="card">
       <div class="section-label">Backup de dados</div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5">
-        Os dados ficam salvos no <strong>localStorage</strong> deste navegador. Use o backup JSON para transferir entre dispositivos ou preservar os dados antes de limpar o navegador.
-      </div>
+      <div class="info-bar">Dados ficam no localStorage deste navegador. Exporte antes de trocar de celular ou limpar o Safari.</div>
       <div style="display:flex;gap:8px">
         <button class="btn btn-primary btn-sm" style="flex:1" onclick="exportData()">Exportar JSON</button>
-        <label class="btn btn-sm" style="flex:1;cursor:pointer">
-          Importar JSON
-          <input type="file" accept=".json" style="display:none" onchange="importData(event)">
-        </label>
+        <label class="btn btn-sm" style="flex:1;cursor:pointer">Importar JSON<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
       </div>
     </div>
 
-    <div class="card pwa-only-hide">
+    <div class="card pwa-hide">
       <div class="section-label">Instalar como app</div>
-      <div style="font-size:11px;color:var(--text3);line-height:1.5">
-        <strong>Android:</strong> Menu do Chrome → "Adicionar à tela inicial"<br>
-        <strong>iPhone:</strong> Safari → botão Compartilhar → "Adicionar à Tela de Início"
-      </div>
+      <div class="info-bar"><strong>Android:</strong> Menu Chrome → Adicionar à tela inicial<br><strong>iPhone:</strong> Safari → Compartilhar → Adicionar à Tela de Início</div>
     </div>`;
 }
 
-function render() {
-  const content = document.getElementById('content');
-  if (!content) return;
-  switch (state.currentTab) {
-    case 'session': content.innerHTML = renderSession(); break;
-    case 'history': content.innerHTML = renderHistory(); break;
-    case 'config':  content.innerHTML = renderConfig();  break;
-  }
-  updateHeader();
+// ── HELPERS INLINE ─────────────────────────────────────────────────────────
+function handleProcChange(val){
+  if(val==='__new__'){ S.session.procedure='__new__'; S.showNewProc=true; render(); setTimeout(()=>document.getElementById('newProcInput')?.focus(),50); }
+  else { S.session.procedure=val; S.showNewProc=false; S.aiText=''; render(); }
 }
 
-function updateHeader() {
-  const sub = document.getElementById('headerSub');
-  if (sub) sub.textContent = `${state.cases.length} casos · ${state.staff.length} staff`;
+// ── PWA ────────────────────────────────────────────────────────────────────
+function injectManifest(){
+  const m = { name:'AnestesIA', short_name:'AnestesIA', start_url:'.', display:'standalone', background_color:'#0a0e0c', theme_color:'#0a0e0c', icons:[{ src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%230a0e0c'/%3E%3Ccircle cx='96' cy='96' r='42' fill='%231D9E75'/%3E%3Ccircle cx='96' cy='96' r='22' fill='%230a0e0c'/%3E%3C/svg%3E", sizes:'192x192', type:'image/svg+xml' }] };
+  const link = document.createElement('link'); link.rel='manifest'; link.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'})); document.head.appendChild(link);
+}
+function registerSW(){
+  if(!('serviceWorker' in navigator)) return;
+  const sw = `const C='anestesia-v2';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.add('/'))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>r))));`;
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
 }
 
-// ─── EVENT HANDLERS ───────────────────────────────────────────────────────────
-
-function handleProcChange(val) {
-  if (val === '__new__') {
-    state.session.procedure = '__new__';
-    state.showNewProc = true;
-    render();
-    setTimeout(() => document.getElementById('newProcInput')?.focus(), 50);
-  } else {
-    state.session.procedure = val;
-    state.showNewProc = false;
-    state.aiText = '';
-    render();
-  }
-}
-
-function addCustomProc() {
-  const p = state.session.newProc.trim();
-  if (!p) return;
-  if (!state.customProcedures.includes(p)) {
-    state.customProcedures.push(p);
-    persist();
-  }
-  state.session.procedure = p;
-  state.session.newProc = '';
-  state.showNewProc = false;
-  render();
-}
-
-function selectTechnique(t) {
-  state.caseForm.technique = state.caseForm.technique === t ? '' : t;
-  render();
-}
-
-function addMed() {
-  const { name, dosePerKg, totalDose, unit } = state.newMed;
-  if (!name.trim()) { showToast('Informe o nome da medicação'); return; }
-  state.caseForm.meds.push({ id: Date.now().toString(), name: name.trim(), dosePerKg, totalDose, unit });
-  state.newMed = { name: '', dosePerKg: '', totalDose: '', unit: 'mg' };
-  state.showNewMedForm = false;
-  render();
-}
-
-function removeMed(id) {
-  state.caseForm.meds = state.caseForm.meds.filter(m => m.id !== id);
-  render();
-}
-
-function addStaff() {
-  const name = state.newStaff.trim();
-  if (!name) return;
-  state.staff.push({ id: Date.now().toString(), name });
-  state.newStaff = '';
-  persist(); render();
-  showToast('Staff adicionado');
-}
-
-function removeStaff(id) {
-  const count = state.cases.filter(c => c.staffId === id).length;
-  if (!confirm(`Remover este staff?${count > 0 ? `\n\nAtenção: ${count} caso(s) associado(s) serão mantidos no histórico.` : ''}`)) return;
-  state.staff = state.staff.filter(s => s.id !== id);
-  persist(); render();
-}
-
-// ─── PWA SERVICE WORKER (inline) ─────────────────────────────────────────────
-const SW_SRC = `
-const CACHE = 'anestesia-v1';
-self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.add('/'))));
-self.addEventListener('fetch', e => {
-  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(res => {
-    const clone = res.clone();
-    caches.open(CACHE).then(c => c.put(e.request, clone));
-    return res;
-  }).catch(() => r)));
-});
-`;
-
-function registerSW() {
-  if (!('serviceWorker' in navigator)) return;
-  const blob = new Blob([SW_SRC], { type: 'application/javascript' });
-  const url = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(url).catch(() => {});
-}
-
-// ─── MANIFEST (inline) ───────────────────────────────────────────────────────
-function injectManifest() {
-  const manifest = {
-    name: 'AnestesIA',
-    short_name: 'AnestesIA',
-    description: 'Assistente de preferências anestésicas',
-    start_url: '.',
-    display: 'standalone',
-    background_color: '#0a0f0d',
-    theme_color: '#0a0f0d',
-    icons: [{
-      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%230a0f0d'/%3E%3Ccircle cx='96' cy='96' r='40' fill='%231D9E75'/%3E%3Ccircle cx='96' cy='96' r='22' fill='%230a0f0d'/%3E%3C/svg%3E",
-      sizes: '192x192', type: 'image/svg+xml'
-    }]
-  };
-  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('link');
-  link.rel = 'manifest'; link.href = url;
-  document.head.appendChild(link);
-}
-
-// ─── INIT ─────────────────────────────────────────────────────────────────────
+// ── INIT ───────────────────────────────────────────────────────────────────
 loadData();
+applyTheme(S.themeHue);
 injectManifest();
 registerSW();
 render();
